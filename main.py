@@ -19,7 +19,7 @@ list_positions = []
 list_images = dict()
 all_gaze_data = []
 
-d = d3dshot.create()
+d = d3dshot.create(capture_output="numpy")
 
 def get_image(name, d):
     # im = ImageGrab.grab()
