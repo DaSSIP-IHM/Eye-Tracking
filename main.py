@@ -3,10 +3,11 @@ import tobii_research as tobii
 import time
 import pandas as pd
 import d3dshot
+from PIL import Image
 
 lestobii = tobii.find_all_eyetrackers()
 montobii = lestobii[0]
-duree = 10
+duree = 60
 mouse = Controller()
 
 print("Son adresse IP: " + montobii.address)
@@ -104,4 +105,4 @@ df.to_excel('gaze_data/all_gaze_data-' + first_system_timestamp + '.xlsx', index
 # print(list_images)
 for timestamp in list_images:
     #print(list_images[timestamp])
-    list_images[timestamp].save('images/' + str(timestamp) + ".png")
+    Image.fromarray(list_images[timestamp]).save('images/' + str(timestamp) + ".png")
