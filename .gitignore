@@ -1,0 +1,5 @@
+env
+images
+gaze_data
+.idea
+__pycache__
