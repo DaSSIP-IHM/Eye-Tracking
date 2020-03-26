@@ -3,3 +3,4 @@ images
 gaze_data
 .idea
 __pycache__
+*.txt

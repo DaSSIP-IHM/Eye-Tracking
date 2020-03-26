@@ -7,7 +7,7 @@ from PIL import Image
 
 lestobii = tobii.find_all_eyetrackers()
 montobii = lestobii[0]
-duree = 60
+duree = 10
 mouse = Controller()
 
 print("Son adresse IP: " + montobii.address)
@@ -22,6 +22,7 @@ all_gaze_data = []
 
 d = d3dshot.create(capture_output="numpy")
 
+
 def get_image(name, d):
     # im = ImageGrab.grab()
     # im.save(name+'.png')
@@ -31,13 +32,8 @@ def get_image(name, d):
 
 
 def move_mouse(gaze_data):
-    x = round((gaze_data['left_gaze_point_on_display_area'][0] + gaze_data['right_gaze_point_on_display_area'][0]) / 2,
-              2)
-    y = round((gaze_data['left_gaze_point_on_display_area'][1] + gaze_data['right_gaze_point_on_display_area'][1]) / 2,
-              2)
-
-    x = min(max(0, int(x * 1920)), 1920)
-    y = min(max(0, int(y * 1080)), 1080)
+    x = gaze_data['x']
+    y = gaze_data['y']
 
     # print(x)
     # print(y)
@@ -71,8 +67,15 @@ def gaze_data_callback(gaze_data):
     # print(gaze_data)
     gaze_data['mouse_position'] = mouse.position
 
-    print(gaze_data)
+    gaze_data['x'] = round(
+        (gaze_data['left_gaze_point_on_display_area'][0] + gaze_data['right_gaze_point_on_display_area'][0]) / 2, 2)
+    gaze_data['y'] = round(
+        (gaze_data['left_gaze_point_on_display_area'][1] + gaze_data['right_gaze_point_on_display_area'][1]) / 2, 2)
 
+    gaze_data['x'] = min(max(0, int(gaze_data['x'] * 1920)), 1920)
+    gaze_data['y'] = min(max(0, int(gaze_data['y'] * 1080)), 1080)
+
+    print(gaze_data)
 
     if all_gaze_data == []:
         gaze_data['image_acquisition'] = False
@@ -85,7 +88,6 @@ def gaze_data_callback(gaze_data):
         gaze_data['image_acquisition'] = True
         all_gaze_data.append(gaze_data)
         get_image(gaze_data['system_time_stamp'], d)
-
 
     # move_mouse(gaze_data)
 
@@ -104,5 +106,5 @@ df.to_excel('gaze_data/all_gaze_data-' + first_system_timestamp + '.xlsx', index
 
 # print(list_images)
 for timestamp in list_images:
-    #print(list_images[timestamp])
+    # print(list_images[timestamp])
     Image.fromarray(list_images[timestamp]).save('images/' + str(timestamp) + ".png")
