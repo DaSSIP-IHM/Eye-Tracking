@@ -15,7 +15,7 @@ def plot_fixations_points(x, y, image_name, pointsize):
 
     # put a red dot, size 40, at 2 locations:
     plt.scatter(x, y, c='r', s=pointsize)
-    plt.savefig('testplot.png', dpi=300)
+    plt.savefig('examples/testplot.png', dpi=300)
     plt.show()
 
 

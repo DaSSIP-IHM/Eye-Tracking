@@ -1,7 +1,7 @@
 from detectors import *
 from plot_fixations import *
 
-FILENAME = 'all_gaze_data-958163687715'
+FILENAME = 'all_gaze_data-958009508617'
 IMAGENAME = 'liberte1080.jpg'
 
 def test(filename=FILENAME, imagename=IMAGENAME):
@@ -25,6 +25,7 @@ def test(filename=FILENAME, imagename=IMAGENAME):
 
     #plot_fixations_points(df['x'], df['y'], image_name, 1)
     plot_fixations_path(df['x'], df['y'], imagename, linewidth=0.3, markersize=0.6)
+    plot_fixations_points(df_output['startx'], df_output['starty'], imagename, 0.2)
 
 if __name__ == '__main__':
 
