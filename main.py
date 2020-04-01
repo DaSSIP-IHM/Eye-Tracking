@@ -7,7 +7,7 @@ from PIL import Image
 
 lestobii = tobii.find_all_eyetrackers()
 montobii = lestobii[0]
-duree = 10
+duree = 40
 mouse = Controller()
 
 print("Son adresse IP: " + montobii.address)
@@ -76,7 +76,7 @@ def gaze_data_callback(gaze_data):
     gaze_data['y'] = min(max(0, int(gaze_data['y'] * 1080)), 1080)
 
     print(gaze_data)
-
+    '''
     if all_gaze_data == []:
         gaze_data['image_acquisition'] = False
         all_gaze_data.append(gaze_data)
@@ -88,8 +88,9 @@ def gaze_data_callback(gaze_data):
         gaze_data['image_acquisition'] = True
         all_gaze_data.append(gaze_data)
         get_image(gaze_data['system_time_stamp'], d)
-
+    '''
     # move_mouse(gaze_data)
+    all_gaze_data.append(gaze_data)
 
     print(gaze_data['system_time_stamp'])
 
