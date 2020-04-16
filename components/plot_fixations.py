@@ -13,12 +13,18 @@ def plot_fixations_points(x, y, duration, image_name, default_path='', output_in
 
     n = [x for x in range(1, len(x) + 1)]
 
-    print(duration)
 
-    duration = duration *60 / max(duration)
+    hoverduration = duration * 60 / max(duration)
+
+    duration =duration / 1000000
+    print(duration.sum)
+
+    hovertext = '<b>Durée</b> : ' + duration.astype(str) + 's<br><b>Fixation n°</b> ' + duration.index.astype(str)
+
     # Add trace
     fig.add_trace(
-        go.Scatter(x=x, y=y, mode='markers', marker_size=duration, hovertext=n)
+        go.Scatter(x=x, y=y, mode='markers', marker_size=hoverduration, hoverinfo="text",
+                   hovertext=hovertext)
     )
     fig.update_layout(title='La liberté guidant le peuple', xaxis=dict(range=[0, 1920], showgrid=False),
                       yaxis=dict(range=[1080, 0], showgrid=False, scaleanchor="x", scaleratio=1), height=1080,
