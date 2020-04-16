@@ -14,11 +14,11 @@ You need to create folders in root before launching the scripts :  __data__, __e
 
 ## Usage
 
-The file [main.py](blob/master/main.py) record all the gaze data and process them with the scripts in the __components__ folder :
+The file [main.py](main.py) record all the gaze data and process them with the scripts in the __components__ folder :
 
-* [detectors.py](blob/master/components/detectors.py) which is based on a script from the package [PyGazeAnalyzer](https://github.com/esdalmaijer/PyGazeAnalyser/tree/master/pygazeanalyser) and which permits to detect fixations in gaze datas.
+* [detectors.py](components/detectors.py) which is based on a script from the package [PyGazeAnalyzer](https://github.com/esdalmaijer/PyGazeAnalyser/tree/master/pygazeanalyser) and which permits to detect fixations in gaze datas.
 
-* [plot_fixations.py](blob/master/components/plot_fixations.py) which permits to plot the fixations and the gaze's path on a picture
+* [plot_fixations.py](plot_fixations.py) which permits to plot the fixations and the gaze's path on a picture
 
 Calibration is done with [Eye Tracker Manager](https://www.tobiipro.com/fr/formation-assistance/telechargements/) here.
 ## Data collected 
