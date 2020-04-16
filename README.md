@@ -22,4 +22,4 @@ The file [main.py](blob/master/main.py) record all the gaze data and process the
 
 
 ## Contributing
-Made with <3 by Alphonse Terrier & Antoine Pasqualini (ISEP - Promotion 2020).
+Made with __<3__ by Alphonse Terrier & Antoine Pasqualini (ISEP - Promotion 2020).
