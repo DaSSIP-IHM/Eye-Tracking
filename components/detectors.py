@@ -25,8 +25,6 @@ def fixation_detection(x, y, time, maxdist=25, mindur=50):
                 Efix	-	list of lists, each containing [starttime, endtime, duration, endx, endy]
 
     author : Edwin Dalmaijer
-
-    Add of pupil dilatation mean by Alphonse Terrier
     """
 
     # x, y, time = remove_missing(x, y, time, missing)
@@ -67,4 +65,5 @@ def fixation_detection(x, y, time, maxdist=25, mindur=50):
     # add last fixation end (we can lose it if dist > maxdist is false for the last point)
     if len(Sfix) > len(Efix):
         Efix.append([Sfix[-1][0], time[len(x) - 1], time[len(x) - 1] - Sfix[-1][0], x[si], y[si]])
+
     return Sfix, Efix

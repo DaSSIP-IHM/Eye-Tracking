@@ -14,7 +14,7 @@ def plotly_fixations_points(x, y, duration, image_name, default_path='', output_
     n = [x for x in range(1, len(x) + 1)]
 
 
-    hoverduration = duration * 60 / max(duration)
+    hoverduration = duration * 100 / max(duration)
 
     duration =duration / 1000000
     print(duration.sum)

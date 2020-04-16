@@ -31,4 +31,4 @@ def process_one_image(filename=FILENAME, imagename=IMAGENAME, default_path=''):
 
 
 if __name__ == '__main__':
-    process(FILENAME, IMAGENAME, default_path=r'../')
+    process_one_image(FILENAME, IMAGENAME, default_path=r'../')
