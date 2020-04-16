@@ -11,9 +11,14 @@ def plot_fixations_points(x, y, duration, image_name, default_path='', output_in
     image_name = default_path + 'examples/liberte1080.jpg'
     fig = go.Figure()
 
+    n = [x for x in range(1, len(x) + 1)]
+
+    print(duration)
+
+    duration = duration *60 / max(duration)
     # Add trace
     fig.add_trace(
-        go.Scatter(x=x, y=y)
+        go.Scatter(x=x, y=y, mode='markers', marker_size=duration, hovertext=n)
     )
     fig.update_layout(title='La liberté guidant le peuple', xaxis=dict(range=[0, 1920], showgrid=False),
                       yaxis=dict(range=[1080, 0], showgrid=False, scaleanchor="x", scaleratio=1), height=1080,
