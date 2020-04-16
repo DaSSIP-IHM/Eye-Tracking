@@ -24,24 +24,31 @@ The file [main.py](blob/master/main.py) record all the gaze data and process the
 
 ### Natively (with [tobii_research](https://pypi.org/project/tobii-research/) package) :
 
-* device_time_stamp :
-* system_time_stamp :
-* left_gaze_point_on_display_area :
-* left_gaze_point_in_user_coordinate_system :
-* left_gaze_point_validity :
-* left_pupil_diameter :
-* left_pupil_validity :
-* left_gaze_origin_in_user_coordinate_system :
-* left_gaze_origin_in_trackbox_coordinate_system :
-* left_gaze_origin_validity :
-* right_gaze_point_on_display_area :
-* right_gaze_point_in_user_coordinate_system :
-* right_gaze_point_validity :
-* right_pupil_diameter :
-* right_pupil_validity :
-* right_gaze_origin_in_user_coordinate_system :
-* right_gaze_origin_in_trackbox_coordinate_system :
-* right_gaze_origin_validity :
+Definitions according to the [Tobii documentation](http://developer.tobiipro.com/commonconcepts.html)
+
+* __device_time_stamp__ : timestamp of the Tobii device
+* __system_time_stamp__ : timestamp of the system
+* __left_gaze_point_on_display_area__ :  Coordinates of the point watched by the user on the screen. The origin is the upper left corner of the display area. The point (0, 0) denotes the upper left corner and (1, 1) the lower right corner of it. 
+
+![](http://developer.tobiipro.com/images/sdk-images/ADCS.png)
+
+* __left_gaze_point_in_user_coordinate_system__ :
+* __left_gaze_point_validity__ : Denotes if the data is trustworthy or not
+* __left_pupil_diameter__ : Internal physical size of the left pupil (not the size it appears to be when looking at the eye from the outside)
+* __left_pupil_validity__ : Denotes if the data is trustworthy or not
+* __left_gaze_origin_in_user_coordinate_system__ :
+* __left_gaze_origin_in_trackbox_coordinate_system__ :
+* __left_gaze_origin_validity__ : Denotes if the data is trustworthy or not
+
+* __right_gaze_point_on_display_area__ : Same as the left eye
+* __right_gaze_point_in_user_coordinate_system__ : Same as the left eye
+* __right_gaze_point_validity__ : Same as the left eye
+* __right_pupil_diameter__ : Same as the left eye
+* __right_pupil_validity__ : Same as the left eye
+* __right_gaze_origin_in_user_coordinate_system__ : Same as the left eye
+* __right_gaze_origin_in_trackbox_coordinate_system__ : Same as the left eye
+* __right_gaze_origin_validity__ : Same as the left eye
+
 
 ### Calculated
 * x :
