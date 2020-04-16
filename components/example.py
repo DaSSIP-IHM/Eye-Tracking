@@ -24,8 +24,9 @@ def process(filename=FILENAME, imagename=IMAGENAME, default_path=''):
     df_fixations = df_fixations[['starttime', 'endtime', 'duration', 'x', 'y']]
     df_fixations.to_excel(default_path + r'processed_data/' + filename + '-fixations.xlsx', index=False)
 
+
     # plot_path(df['x'], df['y'], imagename, linewidth=0.3, markersize=0.6, default_path=default_path)
-    plot_fixations_points(df_fixations['x'], df_fixations['y'], imagename, 0.2, default_path=default_path,
+    plot_fixations_points(df_fixations['x'], df_fixations['y'], df_fixations['duration'], imagename, default_path=default_path,
                           output_ind=str(maxdist))
 
 
