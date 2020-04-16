@@ -15,9 +15,9 @@ def plot_fixations_points(x, y, duration, image_name, default_path='', output_in
     fig.add_trace(
         go.Scatter(x=x, y=y)
     )
-    fig.update_layout(title='La liberté guidant le peuple', xaxis=dict(range=[0, 1920]),
-                      yaxis=dict(range=[1080, 0]), height=1080,
-                      width=1920)
+    fig.update_layout(title='La liberté guidant le peuple', xaxis=dict(range=[0, 1920], showgrid=False),
+                      yaxis=dict(range=[1080, 0], showgrid=False, scaleanchor="x", scaleratio=1), height=1080,
+                      width=1820)
     # Add images
     fig.add_layout_image(
         dict(
