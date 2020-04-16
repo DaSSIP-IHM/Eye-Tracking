@@ -4,12 +4,13 @@ import time
 import pandas as pd
 import d3dshot
 from PIL import Image
-from components.example import test
+from components.example import process
 
 lestobii = tobii.find_all_eyetrackers()
 montobii = lestobii[0]
 duree = 10
 mouse = Controller()
+RESOLUTION = (1920, 1080)
 
 print("Son adresse IP: " + montobii.address)
 print("Le modèle: " + montobii.model)
@@ -64,17 +65,20 @@ def gaze_data_callback(gaze_data):
     print("OG: ({gaze_left_eye}) \t OD: ({gaze_right_eye})".format(
         gaze_left_eye=gaze_data['left_gaze_point_on_display_area'],
         gaze_right_eye=gaze_data['right_gaze_point_on_display_area']))
-    '''
+
     # print(gaze_data)
+    '''
     gaze_data['mouse_position'] = mouse.position
+    try:
+        gaze_data['x'] = round(
+            (gaze_data['left_gaze_point_on_display_area'][0] + gaze_data['right_gaze_point_on_display_area'][0]) / 2, 2)
+        gaze_data['y'] = round(
+            (gaze_data['left_gaze_point_on_display_area'][1] + gaze_data['right_gaze_point_on_display_area'][1]) / 2, 2)
 
-    gaze_data['x'] = round(
-        (gaze_data['left_gaze_point_on_display_area'][0] + gaze_data['right_gaze_point_on_display_area'][0]) / 2, 2)
-    gaze_data['y'] = round(
-        (gaze_data['left_gaze_point_on_display_area'][1] + gaze_data['right_gaze_point_on_display_area'][1]) / 2, 2)
-
-    gaze_data['x'] = min(max(0, int(gaze_data['x'] * 1920)), 1920)
-    gaze_data['y'] = min(max(0, int(gaze_data['y'] * 1080)), 1080)
+        gaze_data['x'] = min(max(0, int(gaze_data['x'] * RESOLUTION[0])), RESOLUTION[0])
+        gaze_data['y'] = min(max(0, int(gaze_data['y'] * RESOLUTION[1])), RESOLUTION[1])
+    except:
+        pass
 
     print(gaze_data)
     '''
@@ -90,7 +94,7 @@ def gaze_data_callback(gaze_data):
         all_gaze_data.append(gaze_data)
         get_image(gaze_data['system_time_stamp'], d)
     '''
-    # move_mouse(gaze_data)
+
     all_gaze_data.append(gaze_data)
 
     print(gaze_data['system_time_stamp'])
@@ -101,12 +105,11 @@ montobii.subscribe_to(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback, as_diction
 time.sleep(duree)
 montobii.unsubscribe_from(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback)
 df = pd.DataFrame.from_records(all_gaze_data)
-print(df)
 
 first_system_timestamp = str(df['system_time_stamp'].values[0])
 df.to_excel('data/all_gaze_data-' + first_system_timestamp + '.xlsx', index=False)
 
-test('all_gaze_data-' + first_system_timestamp)
+process('all_gaze_data-' + first_system_timestamp)
 # print(list_images)
 for timestamp in list_images:
     # print(list_images[timestamp])
