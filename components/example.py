@@ -1,4 +1,4 @@
-from components.detectors import fixation_detection, saccade_detection
+from components.detectors import fixation_detection
 from components.plot_fixations import plot_path, plot_fixations_points
 import pandas as pd
 
@@ -8,9 +8,12 @@ IMAGENAME = 'liberte1080.jpg'
 
 def process(filename=FILENAME, imagename=IMAGENAME, default_path=''):
     df = pd.read_excel(default_path + r'data/' + filename + '.xlsx')
+    print(df.shape)
+    df = df[(df['left_gaze_point_validity'] == 1) | (df['right_gaze_point_validity'] == 1)].reset_index()
+    print(df.shape)
 
-    df = df[(~(df['x'].isna())) & (~(df['y'].isna()))]
-    print(df)
+    df['x'] = df['x'].astype(int)
+    df['y'] = df['y'].astype(int)
 
     maxdist = 175
     # for maxdist in [100, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400]:

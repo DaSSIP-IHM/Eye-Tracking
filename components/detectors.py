@@ -131,11 +131,12 @@ def fixation_detection(x, y, time, missing=0.0, maxdist=25, mindur=50):
                 Efix	-	list of lists, each containing [starttime, endtime, duration, endx, endy]
     """
 
-    x, y, time = remove_missing(x, y, time, missing)
+    #x, y, time = remove_missing(x, y, time, missing)
 
     # empty list to contain data
     Sfix = []
     Efix = []
+
 
     # loop through all coordinates
     si = 0
@@ -143,6 +144,7 @@ def fixation_detection(x, y, time, missing=0.0, maxdist=25, mindur=50):
     for i in range(1, len(x)):
         # calculate Euclidean distance from the current fixation coordinate
         # to the next coordinate
+
         squared_distance = ((x[si] - x[i]) ** 2 + (y[si] - y[i]) ** 2)
         dist = 0.0
         if squared_distance > 0:
