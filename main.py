@@ -4,7 +4,7 @@ import time
 import pandas as pd
 import d3dshot
 from PIL import Image
-from components.example import process
+from components.example import process_one_image
 
 lestobii = tobii.find_all_eyetrackers()
 montobii = lestobii[0]
@@ -102,7 +102,7 @@ first_system_timestamp = str(df['system_time_stamp'].values[0])
 
 df.to_excel('data/all_gaze_data-' + first_system_timestamp + '.xlsx', index=False)
 print(df.dtypes)
-process('all_gaze_data-' + first_system_timestamp)
+process_one_image('all_gaze_data-' + first_system_timestamp)
 # print(list_images)
 for timestamp in list_images:
     # print(list_images[timestamp])

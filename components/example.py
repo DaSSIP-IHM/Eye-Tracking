@@ -1,12 +1,12 @@
 from components.detectors import fixation_detection
-from components.plot_fixations import plot_path, plot_fixations_points
+from components.plot_fixations import plot_path, plotly_fixations_points, matplotlib_fixations_points
 import pandas as pd
 
 FILENAME = 'all_gaze_data-958009508617'
 IMAGENAME = 'liberte1080.jpg'
 
 
-def process(filename=FILENAME, imagename=IMAGENAME, default_path=''):
+def process_one_image(filename=FILENAME, imagename=IMAGENAME, default_path=''):
     df = pd.read_excel(default_path + r'data/' + filename + '.xlsx')
     print(df.shape)
     df = df[(df['left_gaze_point_validity'] == 1) | (df['right_gaze_point_validity'] == 1)].reset_index()
@@ -26,7 +26,7 @@ def process(filename=FILENAME, imagename=IMAGENAME, default_path=''):
 
 
     # plot_path(df['x'], df['y'], imagename, linewidth=0.3, markersize=0.6, default_path=default_path)
-    plot_fixations_points(df_fixations['x'], df_fixations['y'], df_fixations['duration'], imagename, default_path=default_path,
+    plotly_fixations_points(df_fixations['x'], df_fixations['y'], df_fixations['duration'], imagename, default_path=default_path,
                           output_ind=str(maxdist))
 
 

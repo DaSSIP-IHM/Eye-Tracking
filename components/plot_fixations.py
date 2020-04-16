@@ -7,7 +7,7 @@ import plotly.express as px
 # df = pd.read_excel('../gaze_data/analyze/all_gaze_data-952409502500-analyze.xlsx')
 
 
-def plot_fixations_points(x, y, duration, image_name, default_path='', output_ind=''):
+def plotly_fixations_points(x, y, duration, image_name, default_path='', output_ind=''):
     image_name = default_path + 'examples/liberte1080.jpg'
     fig = go.Figure()
 
@@ -59,7 +59,7 @@ def plot_path(x, y, image_name, linewidth, markersize, default_path=''):
     plt.show()
 
 
-def old_plot_fixations_points(x, y, image_name, pointsize, default_path='', output_ind=''):
+def matplotlib_fixations_points(x, y, image_name, pointsize, default_path='', output_ind=''):
     image_name = default_path + 'examples/liberte1080.jpg'
     im = plt.imread(image_name)
     implot = plt.imshow(im)
