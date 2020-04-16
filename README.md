@@ -20,6 +20,37 @@ The file [main.py](blob/master/main.py) record all the gaze data and process the
 
 * [plot_fixations.py](blob/master/components/plot_fixations.py) which permits to plot the fixations and the gaze's path on a picture
 
+## Data collected 
+
+### Natively (with [tobii_research](https://pypi.org/project/tobii-research/) package) :
+
+* device_time_stamp :
+* system_time_stamp :
+* left_gaze_point_on_display_area :
+* left_gaze_point_in_user_coordinate_system :
+* left_gaze_point_validity :
+* left_pupil_diameter :
+* left_pupil_validity :
+* left_gaze_origin_in_user_coordinate_system :
+* left_gaze_origin_in_trackbox_coordinate_system :
+* left_gaze_origin_validity :
+* right_gaze_point_on_display_area :
+* right_gaze_point_in_user_coordinate_system :
+* right_gaze_point_validity :
+* right_pupil_diameter :
+* right_pupil_validity :
+* right_gaze_origin_in_user_coordinate_system :
+* right_gaze_origin_in_trackbox_coordinate_system :
+* right_gaze_origin_validity :
+
+### Calculated
+* x :
+* y :
+### Created
+* mouse_position : 
+
+
 
 ## Contributing
-Made with __<3__ by Alphonse Terrier & Antoine Pasqualini (ISEP - Promotion 2020).
+Made with <3 by Alphonse Terrier & Antoine Pasqualini (ISEP - Promotion 2020).
+
