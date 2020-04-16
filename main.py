@@ -11,6 +11,7 @@ montobii = lestobii[0]
 duree = 10
 mouse = Controller()
 RESOLUTION = (1920, 1080)
+image = True
 
 print("Son adresse IP: " + montobii.address)
 print("Le modèle: " + montobii.model)
@@ -24,7 +25,6 @@ all_gaze_data = []
 
 d = d3dshot.create(capture_output="numpy")
 
-
 def get_image(name, d):
     # im = ImageGrab.grab()
     # im.save(name+'.png')
@@ -37,10 +37,7 @@ def move_mouse(gaze_data):
     x = gaze_data['x']
     y = gaze_data['y']
 
-    # print(x)
-    # print(y)
     list_positions.append((x, y))
-    # print(l)
 
     number_mean = 40
     if len(list_positions) > 11:
@@ -54,10 +51,6 @@ def move_mouse(gaze_data):
 
         print(x, y)
     mouse.position = (x, y)
-
-
-image = True
-
 
 def gaze_data_callback(gaze_data):
     # print(gaze_data)
