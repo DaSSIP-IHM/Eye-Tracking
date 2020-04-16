@@ -4,11 +4,11 @@ import time
 import pandas as pd
 import d3dshot
 from PIL import Image
-from example import test
+from components.example import test
 
 lestobii = tobii.find_all_eyetrackers()
 montobii = lestobii[0]
-duree = 20
+duree = 10
 mouse = Controller()
 
 print("Son adresse IP: " + montobii.address)
@@ -104,9 +104,9 @@ df = pd.DataFrame.from_records(all_gaze_data)
 print(df)
 
 first_system_timestamp = str(df['system_time_stamp'].values[0])
-df.to_excel('gaze_data/all_gaze_data-' + first_system_timestamp + '.xlsx', index=False)
+df.to_excel('data/all_gaze_data-' + first_system_timestamp + '.xlsx', index=False)
 
-test('all_gaze_data-' + first_system_timestamp + '.xlsx')
+test('all_gaze_data-' + first_system_timestamp)
 # print(list_images)
 for timestamp in list_images:
     # print(list_images[timestamp])

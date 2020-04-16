@@ -1,11 +1,11 @@
-from detectors import *
-from plot_fixations import *
-
+from components.detectors import fixation_detection, saccade_detection
+from components.plot_fixations import plot_fixations_path, plot_fixations_points
+import pandas as pd
 FILENAME = 'all_gaze_data-958009508617'
 IMAGENAME = 'liberte1080.jpg'
 
-def test(filename=FILENAME, imagename=IMAGENAME):
-    df = pd.read_excel(r'gaze_data/' + filename + '.xlsx')
+def test(filename=FILENAME, imagename=IMAGENAME, default_path=''):
+    df = pd.read_excel(default_path +r'data/' + filename + '.xlsx')
 
     print(df)
 
@@ -21,12 +21,12 @@ def test(filename=FILENAME, imagename=IMAGENAME):
     df_output = pd.concat([df_fixations, df_saccades])
     df_output = df_output.sort_values(by=['starttime'])
     df_output = df_output[['starttime', 'endtime', 'duration', 'startx', 'starty', 'endx', 'endy', 'type']]
-    df_output.to_excel('gaze_data/analyze/' + filename + '-analyze.xlsx', index=False)
+    df_output.to_excel(default_path +r'processed_data/' + filename + '-analyze.xlsx', index=False)
 
     #plot_fixations_points(df['x'], df['y'], image_name, 1)
-    plot_fixations_path(df['x'], df['y'], imagename, linewidth=0.3, markersize=0.6)
-    plot_fixations_points(df_output['startx'], df_output['starty'], imagename, 0.2)
+    plot_fixations_path(df['x'], df['y'], imagename, linewidth=0.3, markersize=0.6, default_path=default_path)
+    plot_fixations_points(df_output['startx'], df_output['starty'], imagename, 0.2, default_path=default_path)
 
 if __name__ == '__main__':
 
-    test()
+    test(FILENAME, IMAGENAME, default_path=r'../')

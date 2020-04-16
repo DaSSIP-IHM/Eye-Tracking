@@ -1,6 +1,7 @@
 env
 images
-gaze_data
+data
+processed_data
 .idea
 __pycache__
 *.txt
