@@ -25,7 +25,7 @@ def fixation_detection(x_pos, y_pos, dilat, time, maxdist=175, mindur=100000):
                 Sfix	-	list of lists, each containing [starttime]
                 Efix	-	list of lists, each containing [starttime, endtime, duration, endx, endy]
 
-    author : Edwin Dalmaijer
+    author : Edwin Dalmaijer & Alphonse Terrier
     """
 
     # x, y, time = remove_missing(x, y, time, missing)
@@ -62,7 +62,6 @@ def fixation_detection(x_pos, y_pos, dilat, time, maxdist=175, mindur=100000):
             # only store the fixation if the duration is ok
             if time[i - 1] - Sfix[-1][0] >= mindur:
                 fix_dilat = mean(dilats)
-
                 Efix.append([Sfix[-1][0], time[i - 1], time[i - 1] - Sfix[-1][0], x_pos[si], y_pos[si], fix_dilat])
             # delete the last fixation start if it was too short
             else:

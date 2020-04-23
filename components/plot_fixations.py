@@ -51,14 +51,6 @@ def plotly_fixations_points(x, y, duration, image_name, default_path='', output_
     fig.write_html(default_path + 'examples/testplot_points' + output_ind + '.html')
 
 
-def plot_path(x, y, image_name, linewidth, markersize, default_path=''):
-    image_name = default_path + 'examples/liberte1080.jpg'
-    im = plt.imread(image_name)
-    implot = plt.imshow(im)
-
-    plt.plot(x, y, linewidth=linewidth, markersize=markersize)
-    plt.savefig(default_path + 'examples/testplot_path.png', dpi=300)
-    plt.show()
 
 
 def matplotlib_fixations_points(x, y, image_name, pointsize, default_path='', output_ind=''):
@@ -73,4 +65,16 @@ def matplotlib_fixations_points(x, y, image_name, pointsize, default_path='', ou
         plt.text(x[i], y[i], txt, c='r', fontsize=3)
 
     plt.savefig(default_path + 'examples/testplot_points' + output_ind + '.png', dpi=300)
+    plt.show()
+
+
+
+def plot_path(x, y, image_name, linewidth, markersize, default_path=''):
+    print('This function plot_path is deprecated.')
+    image_name = default_path + 'examples/liberte1080.jpg'
+    im = plt.imread(image_name)
+    implot = plt.imshow(im)
+
+    plt.plot(x, y, linewidth=linewidth, markersize=markersize)
+    plt.savefig(default_path + 'examples/testplot_path.png', dpi=300)
     plt.show()
