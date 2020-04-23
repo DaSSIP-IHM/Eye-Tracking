@@ -36,7 +36,7 @@ def process_fixations(filename=FILENAME, default_path=''):
 def process_one_image(filename=FILENAME, imagename=IMAGENAME, default_path=''):
     df_fixations = process_fixations(filename, default_path)
     # plot_path(df['x'], df['y'], imagename, linewidth=0.3, markersize=0.6, default_path=default_path)
-    plotly_fixations_points(df_fixations['x'], df_fixations['y'], df_fixations['duration'], imagename,
+    plotly_fixations_points(df_fixations, imagename,
                             default_path=default_path,
                             output_ind=str(175))
 
