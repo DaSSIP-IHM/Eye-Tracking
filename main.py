@@ -25,6 +25,7 @@ all_gaze_data = []
 
 d = d3dshot.create(capture_output="numpy")
 
+
 def get_image(name, d):
     # im = ImageGrab.grab()
     # im.save(name+'.png')
@@ -54,7 +55,6 @@ def move_mouse(gaze_data):
 
 
 def gaze_data_callback(gaze_data):
-
     gaze_data['mouse_position'] = mouse.position
     if gaze_data['left_gaze_point_validity'] == 1 and gaze_data['right_gaze_point_validity']:
         gaze_data['x'] = round(
@@ -62,11 +62,11 @@ def gaze_data_callback(gaze_data):
         gaze_data['y'] = round(
             (gaze_data['left_gaze_point_on_display_area'][1] + gaze_data['right_gaze_point_on_display_area'][1]) / 2, 2)
 
-    elif gaze_data['left_gaze_point_validity'] == 1 and gaze_data['right_gaze_point_validity'] ==0:
+    elif gaze_data['left_gaze_point_validity'] == 1 and gaze_data['right_gaze_point_validity'] == 0:
         gaze_data['x'] = gaze_data['left_gaze_point_on_display_area'][0]
         gaze_data['y'] = gaze_data['left_gaze_point_on_display_area'][1]
 
-    elif gaze_data['left_gaze_point_validity'] == 0 and gaze_data['right_gaze_point_validity'] ==1:
+    elif gaze_data['left_gaze_point_validity'] == 0 and gaze_data['right_gaze_point_validity'] == 1:
         gaze_data['x'] = gaze_data['right_gaze_point_on_display_area'][0]
         gaze_data['y'] = gaze_data['right_gaze_point_on_display_area'][1]
 
@@ -97,7 +97,7 @@ montobii.subscribe_to(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback, as_diction
 time.sleep(duree)
 montobii.unsubscribe_from(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback)
 df = pd.DataFrame.from_records(all_gaze_data)
-
+df['mean_pupil_diameter'] = (df['left_pupil_diameter'] + df['right_pupil_diameter']) / 2
 first_system_timestamp = str(df['system_time_stamp'].values[0])
 
 df.to_excel('data/all_gaze_data-' + first_system_timestamp + '.xlsx', index=False)

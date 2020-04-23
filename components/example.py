@@ -1,4 +1,4 @@
-from components.detectors import fixation_detection
+from components.detectors import *
 from components.plot_fixations import plot_path, plotly_fixations_points, matplotlib_fixations_points
 import pandas as pd
 
@@ -15,19 +15,26 @@ def process_one_image(filename=FILENAME, imagename=IMAGENAME, default_path=''):
     df['x'] = df['x'].astype(int)
     df['y'] = df['y'].astype(int)
 
+    df['mean_pupil_diameter'] = (df['left_pupil_diameter'] + df['right_pupil_diameter']) / 2
     maxdist = 175
     # for maxdist in [100, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400]:
-    Sfix, Efix = fixation_detection(df['x'], df['y'], df['system_time_stamp'], maxdist=maxdist, mindur=20)
-    df_fixations = pd.DataFrame(data=Efix, columns=['starttime', 'endtime', 'duration', 'x', 'y'])
+    # Sfix, Efix = old_fixation_detection(df['x'], df['y'], df['system_time_stamp'], maxdist=maxdist, mindur=2000)
+    # print(Sfix)
+    Sfix, Efix = fixation_detection(df['x'], df['y'], df['mean_pupil_diameter'], df['system_time_stamp'],
+                                    maxdist=maxdist, mindur=2000)
+
+    df_fixations = pd.DataFrame(data=Efix, columns=['starttime', 'endtime', 'duration', 'x', 'y', 'dilatation'])
 
     df_fixations = df_fixations.sort_values(by=['starttime'])
-    df_fixations = df_fixations[['starttime', 'endtime', 'duration', 'x', 'y']]
-    df_fixations.to_excel(default_path + r'processed_data/' + filename + '-fixations.xlsx', index=False)
 
+    df_fixations.to_excel(default_path + r'processed_data/' + filename + '-fixations.xlsx', index=False)
+    # print(df)
+    print(df_fixations)
 
     # plot_path(df['x'], df['y'], imagename, linewidth=0.3, markersize=0.6, default_path=default_path)
-    plotly_fixations_points(df_fixations['x'], df_fixations['y'], df_fixations['duration'], imagename, default_path=default_path,
-                          output_ind=str(maxdist))
+    plotly_fixations_points(df_fixations['x'], df_fixations['y'], df_fixations['duration'], imagename,
+                            default_path=default_path,
+                            output_ind=str(maxdist))
 
 
 if __name__ == '__main__':
