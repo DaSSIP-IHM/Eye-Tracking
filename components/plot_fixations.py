@@ -61,20 +61,20 @@ def plotly_fixations_points(df, image_name, default_path='', output_ind=''):
 
 def matplotlib_fixations_points(df_fixations, system_time_stamp, filename, default_path=''):
     image_name = default_path + 'images/' + filename+r'/'+str(system_time_stamp)+'.png'
-    print(image_name)
+    #print(image_name)
 
     im = plt.imread(image_name)
-    implot = plt.imshow(im)
+    plt.imshow(im)
+
     temp_df = df_fixations[(df_fixations['starttime'] <= system_time_stamp) & (df_fixations['endtime'] > system_time_stamp)]
     print(temp_df)
-    plt.scatter(temp_df['x'], temp_df['y'], c='#ff876f', s=temp_df['norm_dilatation'])
+    plt.scatter(temp_df['x'], temp_df['y'], c='#ff876f', s=temp_df['norm_dilatation'], alpha=0.4)
 
     output_name = default_path + 'processed_images/' + filename+r'/'+str(system_time_stamp)+'.png'
     plt.savefig(output_name, dpi=300)
-    #plt.show()
     plt.clf()
 
-def export_video(filename, default_path=''):
+def export_video(filename, default_path='', fps=30):
     path = default_path + 'processed_images/'+ filename
 
     img_list=[]
@@ -87,7 +87,7 @@ def export_video(filename, default_path=''):
         size = (width, height)
         img_list.append(img)
 
-    out = cv2.VideoWriter(default_path+'processed_videos/'+filename+'.avi', cv2.VideoWriter_fourcc(*'DIVX'), 30, size)
+    out = cv2.VideoWriter(default_path+'processed_videos/'+filename+'.avi', cv2.VideoWriter_fourcc(*'DIVX'), fps=fps, size=size)
 
     for i in range(len(img_list)):
         out.write(img_list[i])

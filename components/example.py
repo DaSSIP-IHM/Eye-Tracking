@@ -57,7 +57,7 @@ def process_many_images(filename=FILENAME, default_path='', maxdist=175, mindur=
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-    df_fixations['norm_dilatation'] = (df_fixations['dilatation']) * 50 / max(df_fixations['dilatation'])
+    df_fixations['norm_dilatation'] = (df_fixations['dilatation']) * 40 / max(df_fixations['dilatation'])
 
     for system_time_stamp in df_image_acquisition['system_time_stamp']:
         print(system_time_stamp)
@@ -69,4 +69,4 @@ def process_many_images(filename=FILENAME, default_path='', maxdist=175, mindur=
 if __name__ == '__main__':
     # process_one_image(FILENAME, IMAGENAME, default_path=r'../')
     FILENAME = 'all_gaze_data-247733222521'
-    process_many_images(FILENAME, default_path=r'../')
+    process_many_images(FILENAME, default_path=r'../', maxdist=100)
