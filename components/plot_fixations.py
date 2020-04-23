@@ -65,15 +65,21 @@ def matplotlib_fixations_points(df_fixations, system_time_stamp, filename, defau
 
     image_name = default_path + 'images/' + filename + r'/' + str(system_time_stamp) + '.png'
 
+    fig = plt.figure()
+
+    ax = plt.Axes(fig, [0., 0., 1., 1.])
+    ax.set_axis_off()
+    fig.add_axes(ax)
+
     im = plt.imread(image_name)
     plt.imshow(im)
     print(temp_df)
+
     plt.scatter(temp_df['x'], temp_df['y'], c='#ff876f', s=temp_df['norm_dilatation'], alpha=0.4)
 
     output_name = default_path + 'processed_images/' + filename + r'/' + str(system_time_stamp) + '.png'
-    plt.savefig(output_name, dpi=300)
-    plt.clf()
-
+    fig.savefig(output_name, dpi=300, bbox_inches='tight', pad_inches=0)
+    plt.close(fig)
 
 def export_video(filename, default_path='', fps=30):
     path = default_path + 'processed_images/' + filename
