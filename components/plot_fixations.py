@@ -87,7 +87,7 @@ def export_video(filename, default_path=''):
         size = (width, height)
         img_list.append(img)
 
-    out = cv2.VideoWriter(default_path+'project.avi', cv2.VideoWriter_fourcc(*'DIVX'), 30, size)
+    out = cv2.VideoWriter(default_path+'processed_videos/'+'project.avi', cv2.VideoWriter_fourcc(*'DIVX'), 30, size)
 
     for i in range(len(img_list)):
         out.write(img_list[i])
