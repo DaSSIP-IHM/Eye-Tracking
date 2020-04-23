@@ -32,7 +32,7 @@ def plotly_fixations_points(df, image_name, default_path='', output_ind=''):
     )
 
     fig.add_trace(
-        go.Scatter(x=df['x'], y=df['y'],hoverinfo='skip', line=dict(width=1))
+        go.Scatter(x=df['x'], y=df['y'],hoverinfo='skip', marker_size=3, line=dict(width=1))
     )
     fig.update_layout(title='Affichage des fixations',
                       xaxis=dict(range=[0, x_res], showgrid=False),
