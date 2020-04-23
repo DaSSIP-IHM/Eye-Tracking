@@ -75,21 +75,21 @@ def gaze_data_callback(gaze_data):
         gaze_data['y'] = min(max(0, int(gaze_data['y'] * RESOLUTION[1])), RESOLUTION[1])
 
     print(gaze_data)
-    '''
-    if all_gaze_data == []:
-        gaze_data['image_acquisition'] = False
-        all_gaze_data.append(gaze_data)
+    image_acquisition = False
+    if image_acquisition:
+        if all_gaze_data == []:
+            gaze_data['image_acquisition'] = False
+            all_gaze_data.append(gaze_data)
 
-    if all_gaze_data[-1]['image_acquisition']:
-        gaze_data['image_acquisition'] = False
-        all_gaze_data.append(gaze_data)
+        if all_gaze_data[-1]['image_acquisition']:
+            gaze_data['image_acquisition'] = False
+            all_gaze_data.append(gaze_data)
+        else:
+            gaze_data['image_acquisition'] = True
+            all_gaze_data.append(gaze_data)
+            get_image(gaze_data['system_time_stamp'], d)
     else:
-        gaze_data['image_acquisition'] = True
         all_gaze_data.append(gaze_data)
-        get_image(gaze_data['system_time_stamp'], d)
-    '''
-
-    all_gaze_data.append(gaze_data)
 
 
 montobii.subscribe_to(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback, as_dictionary=True)
@@ -97,7 +97,7 @@ montobii.subscribe_to(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback, as_diction
 time.sleep(duree)
 montobii.unsubscribe_from(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback)
 df = pd.DataFrame.from_records(all_gaze_data)
-df['mean_pupil_diameter'] = (df['left_pupil_diameter'] + df['right_pupil_diameter']) / 2
+
 first_system_timestamp = str(df['system_time_stamp'].values[0])
 
 df.to_excel('data/all_gaze_data-' + first_system_timestamp + '.xlsx', index=False)
