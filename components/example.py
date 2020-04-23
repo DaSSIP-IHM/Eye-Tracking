@@ -32,6 +32,10 @@ def process_fixations(df, maxdist=175, mindur=2000):
     return df_fixations
 
 
+def normalize_col(col):
+    col = (col - min(col)) / (max(col) - min(col))
+    return col
+
 def process_one_image(filename=FILENAME, imagename=IMAGENAME, default_path='', maxdist=175, mindur=2000):
     df = pd.read_excel(default_path + r'data/' + filename + '.xlsx')
 
@@ -57,12 +61,12 @@ def process_many_images(filename=FILENAME, default_path='', maxdist=175, mindur=
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-    df_fixations['norm_dilatation'] = (df_fixations['dilatation']) * 40 / max(df_fixations['dilatation'])
+    df_fixations['norm_dilatation'] = normalize_col(df_fixations['dilatation']) * 100
 
     for system_time_stamp in df_image_acquisition['system_time_stamp']:
         print(system_time_stamp)
         matplotlib_fixations_points(df_fixations, system_time_stamp, filename, default_path)
-    
+
     export_video(filename, default_path)
 
 
