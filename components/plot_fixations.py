@@ -37,7 +37,7 @@ def plotly_fixations_points(df, image_name, default_path='', output_ind=''):
     fig.update_layout(title='Affichage des fixations',
                       xaxis=dict(range=[0, x_res], showgrid=False),
                       yaxis=dict(range=[y_res, 0], showgrid=False, scaleanchor="x", scaleratio=1), height=y_res,
-                      width=x_res)
+                      width=x_res, showlegend=False)
 
     fig.add_layout_image(
         dict(
