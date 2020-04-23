@@ -57,6 +57,10 @@ def process_many_images(filename=FILENAME, default_path='', maxdist=175, mindur=
         if not os.path.exists(directory):
             os.makedirs(directory)
 
+
+
+    df_fixations['norm_dilatation'] = (df_fixations['dilatation']) * 50 / max(df_fixations['dilatation'])
+
     for system_time_stamp in df_image_acquisition['system_time_stamp']:
         print(system_time_stamp)
         matplotlib_fixations_points(df_fixations, system_time_stamp, filename, default_path)

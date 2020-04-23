@@ -67,7 +67,7 @@ def matplotlib_fixations_points(df_fixations, system_time_stamp, filename, defau
     implot = plt.imshow(im)
     temp_df = df_fixations[(df_fixations['starttime'] <= system_time_stamp) & (df_fixations['endtime'] > system_time_stamp)]
     print(temp_df)
-    plt.scatter(temp_df['x'], temp_df['y'], c='r', s=100)
+    plt.scatter(temp_df['x'], temp_df['y'], c='#ff876f', s=temp_df['norm_dilatation'])
 
     output_name = default_path + 'processed_images/' + filename+r'/'+str(system_time_stamp)+'.png'
     plt.savefig(output_name, dpi=300)
@@ -87,7 +87,7 @@ def export_video(filename, default_path=''):
         size = (width, height)
         img_list.append(img)
 
-    out = cv2.VideoWriter(default_path+'processed_videos/'+'project.avi', cv2.VideoWriter_fourcc(*'DIVX'), 30, size)
+    out = cv2.VideoWriter(default_path+'processed_videos/'+filename+'.avi', cv2.VideoWriter_fourcc(*'DIVX'), 30, size)
 
     for i in range(len(img_list)):
         out.write(img_list[i])
@@ -103,7 +103,7 @@ def old_matplotlib_fixations_points(x, y, image_name, pointsize, default_path=''
     # plt.scatter(x, y, c='r', s=pointsize)
 
     for i, txt in enumerate(n):
-        plt.text(x[i], y[i], txt, c='r', fontsize=3)
+        plt.text(x[i], y[i], txt, c='#ff876f', fontsize=3)
 
     plt.savefig(default_path + 'examples/testplot_points' + output_ind + '.png', dpi=300)
     plt.show()
