@@ -33,8 +33,8 @@ def process_fixations(df, maxdist=175, mindur=2000):
 
 
 def normalize_col(col):
-    col = (col - min(col)) / (max(col) - min(col))
-    return col
+    norm = (col - min(col)) / (max(col) - min(col))
+    return norm
 
 def process_one_image(filename=FILENAME, imagename=IMAGENAME, default_path='', maxdist=175, mindur=2000):
     df = pd.read_excel(default_path + r'data/' + filename + '.xlsx')
