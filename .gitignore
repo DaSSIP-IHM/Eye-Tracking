@@ -6,3 +6,5 @@ processed_data
 __pycache__
 *.txt
 trash
+processed_images
+processed_videos

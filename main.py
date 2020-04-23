@@ -4,11 +4,11 @@ import time
 import pandas as pd
 import d3dshot
 from PIL import Image
-from components.example import process_one_image
+from components.example import *
 
 lestobii = tobii.find_all_eyetrackers()
 montobii = lestobii[0]
-duree = 10
+duree = 30
 mouse = Controller()
 RESOLUTION = (1920, 1080)
 image = True
@@ -75,7 +75,7 @@ def gaze_data_callback(gaze_data):
         gaze_data['y'] = min(max(0, int(gaze_data['y'] * RESOLUTION[1])), RESOLUTION[1])
 
     print(gaze_data)
-    image_acquisition = False
+    image_acquisition = True
     if image_acquisition:
         if all_gaze_data == []:
             gaze_data['image_acquisition'] = False
@@ -102,8 +102,9 @@ first_system_timestamp = str(df['system_time_stamp'].values[0])
 
 df.to_excel('data/all_gaze_data-' + first_system_timestamp + '.xlsx', index=False)
 print(df.dtypes)
-process_one_image('all_gaze_data-' + first_system_timestamp)
 # print(list_images)
 for timestamp in list_images:
     # print(list_images[timestamp])
     Image.fromarray(list_images[timestamp]).save('images/' + str(timestamp) + ".png")
+
+process_one_image('all_gaze_data-' + first_system_timestamp)

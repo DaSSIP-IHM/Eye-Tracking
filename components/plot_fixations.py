@@ -3,6 +3,8 @@ import pandas as pd
 import plotly.graph_objects as go
 from PIL import Image
 import plotly.express as px
+import cv2
+import os
 
 
 # df = pd.read_excel('../gaze_data/analyze/all_gaze_data-952409502500-analyze.xlsx')
@@ -57,7 +59,42 @@ def plotly_fixations_points(df, image_name, default_path='', output_ind=''):
     fig.write_html(default_path + 'examples/testplot_points' + output_ind + '.html')
 
 
-def matplotlib_fixations_points(x, y, image_name, pointsize, default_path='', output_ind=''):
+def matplotlib_fixations_points(df_fixations, system_time_stamp, filename, default_path=''):
+    image_name = default_path + 'images/' + filename+r'/'+str(system_time_stamp)+'.png'
+    print(image_name)
+
+    im = plt.imread(image_name)
+    implot = plt.imshow(im)
+    temp_df = df_fixations[(df_fixations['starttime'] <= system_time_stamp) & (df_fixations['endtime'] > system_time_stamp)]
+    print(temp_df)
+    plt.scatter(temp_df['x'], temp_df['y'], c='r', s=100)
+
+    output_name = default_path + 'processed_images/' + filename+r'/'+str(system_time_stamp)+'.png'
+    plt.savefig(output_name, dpi=300)
+    #plt.show()
+    plt.clf()
+
+def export_video(filename, default_path=''):
+    path = default_path + 'processed_images/'+ filename
+
+    img_list=[]
+    for picname in os.listdir(path):
+        path_file = path +r'/'+ picname
+        print(path_file)
+
+        img = cv2.imread(path_file)
+        height, width, layers = img.shape
+        size = (width, height)
+        img_list.append(img)
+
+    out = cv2.VideoWriter(default_path+'project.avi', cv2.VideoWriter_fourcc(*'DIVX'), 30, size)
+
+    for i in range(len(img_list)):
+        out.write(img_list[i])
+    out.release()
+
+
+def old_matplotlib_fixations_points(x, y, image_name, pointsize, default_path='', output_ind=''):
     image_name = default_path + 'examples/liberte1080.jpg'
     im = plt.imread(image_name)
     implot = plt.imshow(im)

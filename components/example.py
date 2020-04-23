@@ -1,6 +1,7 @@
 from components.detectors import *
-from components.plot_fixations import plot_path, plotly_fixations_points, matplotlib_fixations_points
+from components.plot_fixations import *
 import pandas as pd
+import os
 
 FILENAME = 'all_gaze_data-958009508617'
 IMAGENAME = 'liberte1080.jpg'
@@ -42,13 +43,33 @@ def process_one_image(filename=FILENAME, imagename=IMAGENAME, default_path=''):
                             default_path=default_path,
                             output_ind=str(175))
 
-def process_many_images(filename=FILENAME, imagename=IMAGENAME, default_path=''):
+def process_many_images(filename=FILENAME, default_path=''):
     df = pd.read_excel(default_path + r'data/' + filename + '.xlsx')
 
     df_fixations = process_fixations(df)
-
     df_fixations.to_excel(default_path + r'processed_data/' + filename + '-fixations.xlsx', index=False)
+
+    df_image_acquisition = df[df['image_acquisition'] == True]
+
+    for directory in [default_path + 'images/' + filename, default_path + 'processed_images/' + filename]:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+    '''
+    for system_time_stamp in df_image_acquisition['system_time_stamp']:
+        print(system_time_stamp)
+        matplotlib_fixations_points(df_fixations, system_time_stamp, filename, default_path)
+    '''
+
+    export_video(filename, default_path)
+
+    '''
+    path = r'../images/' + filename
+    pictures_path = [os.path.abspath(x) for x in os.listdir(path)]
+    print(pictures_path)
+    '''
 
 
 if __name__ == '__main__':
-    process_one_image(FILENAME, IMAGENAME, default_path=r'../')
+    #process_one_image(FILENAME, IMAGENAME, default_path=r'../')
+    FILENAME = 'all_gaze_data-247733222521'
+    process_many_images(FILENAME, default_path=r'../')
