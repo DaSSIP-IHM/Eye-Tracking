@@ -22,7 +22,6 @@ def plotly_fixations_points(df, image_name, default_path='', output_ind=''):
     hoverduration = df['duration'] * 100 / max(df['duration'])
 
     df['duration'] = df['duration'] / 1000000
-    # print(duration.sum)
 
     hovertext = '<b>Durée</b> : ' + df['duration'].round(2).astype(str) + 's<br><b>Moyenne de dilatation</b> :' + df[
         'dilatation'].round(2).astype(str) + 'mm<br><b>Fixation n°</b> ' + (df.index + 1).astype(str)
@@ -77,6 +76,7 @@ def export_video(df_fixations, filename, default_path='', fps=30):
         y = temp_df['y']
         size = temp_df['norm_dilatation']
         if len(x) == 1:
+            # Transparency drawing : https://gist.github.com/IAmSuyogJadhav/305bfd9a0605a4c096383408bee7fd5c
             overlay = img.copy()
             cv2.circle(overlay, center=(x, y), radius=size, color=(255, 135, 111), thickness=-1)
             alpha = 0.4
