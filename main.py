@@ -1,14 +1,13 @@
 from pynput.mouse import Button, Controller
 import tobii_research as tobii
-import time
 import pandas as pd
 import d3dshot
-from PIL import Image
 from components.process import *
+import time
 
 lestobii = tobii.find_all_eyetrackers()
 montobii = lestobii[0]
-duree = 30
+duree = 255
 mouse = Controller()
 RESOLUTION = (1920, 1080)
 #image = True
@@ -25,13 +24,10 @@ list_images = dict()
 all_gaze_data = []
 
 d = d3dshot.create(capture_output="numpy")
-
+d.display = d.displays[0]
 
 def get_image(name, d):
-    # im = ImageGrab.grab()
-    # im.save(name+'.png')
     im = d.screenshot()
-    # im = getscreenNP(reduction=4)
     list_images[name] = im
 
 
@@ -75,7 +71,6 @@ def gaze_data_callback(gaze_data):
         gaze_data['x'] = min(max(0, int(gaze_data['x'] * RESOLUTION[0])), RESOLUTION[0])
         gaze_data['y'] = min(max(0, int(gaze_data['y'] * RESOLUTION[1])), RESOLUTION[1])
 
-    print(gaze_data)
 
     if image_acquisition:
         if all_gaze_data == []:
@@ -91,24 +86,44 @@ def gaze_data_callback(gaze_data):
             get_image(gaze_data['system_time_stamp'], d)
     else:
         all_gaze_data.append(gaze_data)
+    print(gaze_data)
 
 
 montobii.subscribe_to(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback, as_dictionary=True)
 
 time.sleep(duree)
 montobii.unsubscribe_from(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback)
+
+start_time = time.time()
+
 df = pd.DataFrame.from_records(all_gaze_data)
+#print(df.shape)
 
 first_system_timestamp = str(df['system_time_stamp'].values[0])
 
-df.to_excel('data/all_gaze_data-' + first_system_timestamp + '.xlsx', index=False)
 print(df.dtypes)
 # print(list_images)
+
+directory ='images/' + 'all_gaze_data-' + first_system_timestamp + "/"
+
+if not os.path.exists(directory):
+    os.makedirs(directory)
+
+#print(list_images)
 for timestamp in list_images:
     # print(list_images[timestamp])
-    Image.fromarray(list_images[timestamp]).save('images/' + str(timestamp) + ".png")
+    im = Image.fromarray(list_images[timestamp]).save(directory + str(timestamp) + ".png")
+    del im
+
+del list_images
+
+print("Temps d'export des screenshots en PNG : %s secondes ---" % (time.time() - start_time))
+
+df.to_excel('data/all_gaze_data-' + first_system_timestamp + '.xlsx', index=False)
 
 if image_acquisition:
     process_many_images('all_gaze_data-' + first_system_timestamp)
 else:
     process_one_image('all_gaze_data-' + first_system_timestamp)
+
+print("Temps total de post-traitement des données après l'acquisition : %s secondes ---" % (time.time() - start_time))

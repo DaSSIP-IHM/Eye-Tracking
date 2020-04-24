@@ -75,22 +75,26 @@ def export_video(df_fixations, filename, default_path='', fps=30):
         x = temp_df['x']
         y = temp_df['y']
         size = temp_df['norm_dilatation']
+        print(temp_df)
         if len(x) == 1:
             # Transparency drawing : https://gist.github.com/IAmSuyogJadhav/305bfd9a0605a4c096383408bee7fd5c
             overlay = img.copy()
             cv2.circle(overlay, center=(x, y), radius=size, color=(255, 135, 111), thickness=-1)
             alpha = 0.4
             img = cv2.addWeighted(overlay, alpha, img, 1 - alpha, 0)
+            del overlay
 
         height, width, layers = img.shape
         size = (width, height)
         img_list.append(img)
+
 
     out = cv2.VideoWriter(default_path + 'videos/' + filename + '.avi', cv2.VideoWriter_fourcc(*'DIVX'),
                           fps=fps, frameSize=size)
 
     for i in range(len(img_list)):
         out.write(img_list[i])
+    del img_list
     out.release()
 
 
