@@ -10,7 +10,7 @@ Clone this repository and use the package manager [pip](https://pip.pypa.io/en/s
 pip install -r requirements.txt
 ```
 
-You need to create folders in root before launching the scripts :  __data__, __examples__, __images__, __processed_data__.
+You need to create folders in root before launching the scripts :  __data__, __examples__, __images__, __processed_data__, __videos__.
 
 ## Usage
 
