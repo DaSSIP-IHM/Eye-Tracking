@@ -17,10 +17,6 @@ def process_fixations(df, maxdist=175, mindur=2000):
 
     df['mean_pupil_diameter'] = (df['left_pupil_diameter'] + df['right_pupil_diameter']) / 2
 
-    # for maxdist in [100, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400]:
-    # Sfix, Efix = old_fixation_detection(df['x'], df['y'], df['system_time_stamp'], maxdist=maxdist, mindur=2000)
-    # print(Sfix)
-
     Sfix, Efix = fixation_detection(df['x'], df['y'], df['mean_pupil_diameter'], df['system_time_stamp'],
                                     maxdist=maxdist, mindur=mindur)
 
@@ -28,7 +24,6 @@ def process_fixations(df, maxdist=175, mindur=2000):
 
     df_fixations = df_fixations.sort_values(by=['starttime'])
 
-    # print(df)
     return df_fixations
 
 
@@ -44,7 +39,6 @@ def process_one_image(filename=FILENAME, imagename=IMAGENAME, default_path='', m
 
     df_fixations.to_excel(default_path + r'processed_data/' + filename + '-fixations.xlsx', index=False)
 
-    # plot_path(df['x'], df['y'], imagename, linewidth=0.3, markersize=0.6, default_path=default_path)
     plotly_fixations_points(df_fixations, imagename,
                             default_path=default_path,
                             output_ind=str(maxdist))
@@ -65,7 +59,7 @@ def process_many_images(filename=FILENAME, default_path='', maxdist=175, mindur=
     export_video(df_fixations, filename, default_path)
 
 
+
 if __name__ == '__main__':
-    # process_one_image(FILENAME, IMAGENAME, default_path=r'../')
     FILENAME = 'all_gaze_data-247733222521'
     process_many_images(FILENAME, default_path=r'../', maxdist=100)
