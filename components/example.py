@@ -36,6 +36,7 @@ def normalize_col(col):
     norm = (col - min(col)) / (max(col) - min(col))
     return norm
 
+
 def process_one_image(filename=FILENAME, imagename=IMAGENAME, default_path='', maxdist=175, mindur=2000):
     df = pd.read_excel(default_path + r'data/' + filename + '.xlsx')
 
@@ -55,19 +56,13 @@ def process_many_images(filename=FILENAME, default_path='', maxdist=175, mindur=
     df_fixations = process_fixations(df, maxdist, mindur)
     df_fixations.to_excel(default_path + r'processed_data/' + filename + '-fixations.xlsx', index=False)
 
-    df_image_acquisition = df[df['image_acquisition'] == True]
-
     for directory in [default_path + 'images/' + filename, default_path + 'processed_images/' + filename]:
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-    df_fixations['norm_dilatation'] = normalize_col(df_fixations['dilatation']) * 200
+    df_fixations['norm_dilatation'] = normalize_col(df_fixations['dilatation']) * 70
 
-    for system_time_stamp in df_image_acquisition['system_time_stamp']:
-        print(system_time_stamp)
-        matplotlib_fixations_points(df_fixations, system_time_stamp, filename, default_path)
-
-    export_video(filename, default_path)
+    export_video(df_fixations, filename, default_path)
 
 
 if __name__ == '__main__':

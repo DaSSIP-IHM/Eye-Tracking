@@ -59,6 +59,44 @@ def plotly_fixations_points(df, image_name, default_path='', output_ind=''):
     fig.write_html(default_path + 'examples/testplot_points' + output_ind + '.html')
 
 
+def export_video(df_fixations, filename, default_path='', fps=30):
+    path = default_path + 'images/' + filename
+
+    img_list = []
+
+    for picname in os.listdir(path):
+        filename, file_extension = os.path.splitext(picname)
+
+        path_file = path + r'/' + filename + file_extension
+        print(path_file)
+        img = cv2.imread(path_file)
+
+        temp_df = df_fixations[
+            (df_fixations['starttime'] <= int(filename)) & (df_fixations['endtime'] > int(filename))]
+
+        x = temp_df['x']
+        y = temp_df['y']
+        size = temp_df['norm_dilatation']
+        try:
+            overlay = img.copy()
+            cv2.circle(overlay, center=(x, y), radius=size, color=(255, 135, 111), thickness=-1)
+            alpha = 0.4
+            img = cv2.addWeighted(overlay, alpha, img, 1 - alpha, 0)
+        except:
+            pass
+
+        height, width, layers = img.shape
+        size = (width, height)
+        img_list.append(img)
+
+    out = cv2.VideoWriter(default_path + 'processed_videos/' + filename + '.avi', cv2.VideoWriter_fourcc(*'DIVX'),
+                          fps=fps, frameSize=size)
+
+    for i in range(len(img_list)):
+        out.write(img_list[i])
+    out.release()
+
+
 def matplotlib_fixations_points(df_fixations, system_time_stamp, filename, default_path=''):
     temp_df = df_fixations[
         (df_fixations['starttime'] <= system_time_stamp) & (df_fixations['endtime'] > system_time_stamp)]
@@ -80,41 +118,6 @@ def matplotlib_fixations_points(df_fixations, system_time_stamp, filename, defau
     output_name = default_path + 'processed_images/' + filename + r'/' + str(system_time_stamp) + '.png'
     fig.savefig(output_name, dpi=300, bbox_inches='tight', pad_inches=0)
     plt.close(fig)
-
-def export_video(filename, default_path='', fps=30):
-    path = default_path + 'processed_images/' + filename
-
-    img_list = []
-    for picname in os.listdir(path):
-        path_file = path + r'/' + picname
-        print(path_file)
-
-        img = cv2.imread(path_file)
-        height, width, layers = img.shape
-        size = (width, height)
-        img_list.append(img)
-
-    out = cv2.VideoWriter(default_path + 'processed_videos/' + filename + '.avi', cv2.VideoWriter_fourcc(*'DIVX'),
-                          fps=fps, frameSize=size)
-
-    for i in range(len(img_list)):
-        out.write(img_list[i])
-    out.release()
-
-
-def old_matplotlib_fixations_points(x, y, image_name, pointsize, default_path='', output_ind=''):
-    image_name = default_path + 'examples/liberte1080.jpg'
-    im = plt.imread(image_name)
-    implot = plt.imshow(im)
-
-    n = [x for x in range(1, len(x) + 1)]
-    # plt.scatter(x, y, c='r', s=pointsize)
-
-    for i, txt in enumerate(n):
-        plt.text(x[i], y[i], txt, c='#ff876f', fontsize=3)
-
-    plt.savefig(default_path + 'examples/testplot_points' + output_ind + '.png', dpi=300)
-    plt.show()
 
 
 def plot_path(x, y, image_name, linewidth, markersize, default_path=''):
