@@ -4,14 +4,15 @@ import time
 import pandas as pd
 import d3dshot
 from PIL import Image
-from components.example import *
+from components.process import *
 
 lestobii = tobii.find_all_eyetrackers()
 montobii = lestobii[0]
 duree = 30
 mouse = Controller()
 RESOLUTION = (1920, 1080)
-image = True
+#image = True
+image_acquisition = True
 
 print("Son adresse IP: " + montobii.address)
 print("Le modèle: " + montobii.model)
@@ -75,7 +76,7 @@ def gaze_data_callback(gaze_data):
         gaze_data['y'] = min(max(0, int(gaze_data['y'] * RESOLUTION[1])), RESOLUTION[1])
 
     print(gaze_data)
-    image_acquisition = True
+
     if image_acquisition:
         if all_gaze_data == []:
             gaze_data['image_acquisition'] = False
@@ -107,4 +108,7 @@ for timestamp in list_images:
     # print(list_images[timestamp])
     Image.fromarray(list_images[timestamp]).save('images/' + str(timestamp) + ".png")
 
-process_one_image('all_gaze_data-' + first_system_timestamp)
+if image_acquisition:
+    process_many_images('all_gaze_data-' + first_system_timestamp)
+else:
+    process_one_image('all_gaze_data-' + first_system_timestamp)
