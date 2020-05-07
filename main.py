@@ -7,7 +7,7 @@ import time
 
 lestobii = tobii.find_all_eyetrackers()
 montobii = lestobii[0]
-duree = 10  # DUREE DE L'ACQUISITION EN SECONDES
+duree = 290  # DUREE DE L'ACQUISITION EN SECONDES
 mouse = Controller()
 RESOLUTION = (1920, 1080)  # RESOLUTION DE L'ECRAN A DEFINIR
 # image = True
@@ -119,9 +119,9 @@ print("Temps d'export des screenshots en PNG : %s secondes ---" % (time.time() -
 
 
 if image_acquisition:
-    process_many_images(dict_images, df, first_system_timestamp)
+    process_many_images(df, first_system_timestamp, dict_images)
 else:
-    process_one_image(df, first_system_timestamp)
+    process_one_image(df, first_system_timestamp, res=RESOLUTION)
 
 df.to_csv('data/all_gaze_data-' + first_system_timestamp + '.csv', index=False)
 

@@ -8,13 +8,13 @@ import copy
 
 
 
-def plotly_fixations_points(df, image_name, default_path='', output_ind=''):
+def plotly_fixations_points(df, image_name, res, default_path='', output_ind=''):
     image_name = default_path + 'examples/liberte1080.jpg'
     fig = go.Figure()
     # x, y, duration
 
-    x_res = 1920
-    y_res = 1080
+    x_res = res[0]
+    y_res = res[1]
 
     n = [x for x in range(1, len(df['x']) + 1)]
 
@@ -58,11 +58,7 @@ def plotly_fixations_points(df, image_name, default_path='', output_ind=''):
 
 def export_video(df_fixations, dict_images, filename, default_path='', fps=30):
 
-    img_list = []
-
     for timestamp in dict_images:
-        im = dict_images[timestamp]
-        #img = cv2.imread(path_file)
 
         temp_df = df_fixations[
             (df_fixations['starttime'] <= int(timestamp)) & (df_fixations['endtime'] > int(timestamp))]
@@ -71,28 +67,25 @@ def export_video(df_fixations, dict_images, filename, default_path='', fps=30):
         y = temp_df['y']
         size = temp_df['norm_dilatation']
         print(temp_df)
+        dict_images[timestamp] = cv2.cvtColor(dict_images[timestamp], cv2.COLOR_BGR2RGB)
         if len(x) == 1:
             # Transparency drawing : https://gist.github.com/IAmSuyogJadhav/305bfd9a0605a4c096383408bee7fd5c
-            overlay = im.copy()
-            cv2.circle(overlay, center=(x, y), radius=size, color=(255, 135, 111), thickness=-1)
+            overlay = dict_images[timestamp].copy()
+            circle = cv2.circle(overlay, center=(x, y), radius=size, color=(255, 135, 111), thickness=-1)
             alpha = 0.4
-            img = cv2.addWeighted(overlay, alpha, im, 1 - alpha, 0)
-            del overlay
-        else:
-            img = copy.deepcopy(im)
+            dict_images[timestamp] = cv2.addWeighted(overlay, alpha, dict_images[timestamp], 1 - alpha, 0)
+            del overlay, circle
 
-        height, width, layers = img.shape
+        height, width, layers = dict_images[timestamp].shape
         size = (width, height)
-        img_list.append(img)
-        del im
+
 
 
     out = cv2.VideoWriter(default_path + 'videos/' + filename + '.avi', cv2.VideoWriter_fourcc(*'DIVX'),
                           fps=fps, frameSize=size)
 
-    for i in range(len(img_list)):
-        out.write(img_list[i])
-    del img_list
+    for timestamp in dict_images:
+        out.write(dict_images[timestamp])
     out.release()
 
 def plot_path(x, y, image_name, linewidth, markersize, default_path=''):
