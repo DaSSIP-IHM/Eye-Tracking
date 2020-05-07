@@ -58,47 +58,6 @@ def plotly_fixations_points(df, image_name, default_path='', output_ind=''):
     fig.write_html(default_path + 'examples/testplot_points' + output_ind + '.html')
 
 
-def old_export_video(df_fixations, filename, default_path='', fps=30):
-    path = default_path + 'images/' + filename
-
-    img_list = []
-
-    for picname in os.listdir(path):
-        imagename, file_extension = os.path.splitext(picname)
-
-        path_file = path + r'/' + imagename + file_extension
-        print(path_file)
-        img = cv2.imread(path_file)
-
-        temp_df = df_fixations[
-            (df_fixations['starttime'] <= int(imagename)) & (df_fixations['endtime'] > int(imagename))]
-
-        x = temp_df['x']
-        y = temp_df['y']
-        size = temp_df['norm_dilatation']
-        print(temp_df)
-        if len(x) == 1:
-            # Transparency drawing : https://gist.github.com/IAmSuyogJadhav/305bfd9a0605a4c096383408bee7fd5c
-            overlay = img.copy()
-            cv2.circle(overlay, center=(x, y), radius=size, color=(255, 135, 111), thickness=-1)
-            alpha = 0.4
-            img = cv2.addWeighted(overlay, alpha, img, 1 - alpha, 0)
-            del overlay
-
-        height, width, layers = img.shape
-        size = (width, height)
-        img_list.append(img)
-
-
-    out = cv2.VideoWriter(default_path + 'videos/' + filename + '.avi', cv2.VideoWriter_fourcc(*'DIVX'),
-                          fps=fps, frameSize=size)
-
-    for i in range(len(img_list)):
-        out.write(img_list[i])
-    del img_list
-    out.release()
-
-
 def export_video(df_fixations, dict_images, filename, default_path='', fps=30):
 
     img_list = []
