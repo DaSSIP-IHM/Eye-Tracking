@@ -54,7 +54,6 @@ def process_many_images(dict_images, filename=FILENAME, default_path='', maxdist
 
     df_fixations['norm_dilatation'] = normalize_col(df_fixations['dilatation']) * 1500
 
-    # export_video(df_fixations, filename, default_path)
 
     export_video(df_fixations, dict_images, filename, default_path)
 
