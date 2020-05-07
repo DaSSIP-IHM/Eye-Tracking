@@ -104,12 +104,7 @@ df = pd.DataFrame.from_records(all_gaze_data)
 
 first_system_timestamp = str(df['system_time_stamp'].values[0])
 
-print(df.dtypes)
 
-directory = 'images/' + 'all_gaze_data-' + first_system_timestamp + "/"
-
-if not os.path.exists(directory):
-    os.makedirs(directory)
 
 # print(list_images)
 '''
@@ -122,11 +117,12 @@ del dict_images
 '''
 print("Temps d'export des screenshots en PNG : %s secondes ---" % (time.time() - start_time))
 
-df.to_excel('data/all_gaze_data-' + first_system_timestamp + '.xlsx', index=False)
 
 if image_acquisition:
-    process_many_images(dict_images, 'all_gaze_data-' + first_system_timestamp)
+    process_many_images(dict_images, df, first_system_timestamp)
 else:
-    process_one_image('all_gaze_data-' + first_system_timestamp)
+    process_one_image(df, first_system_timestamp)
+
+df.to_csv('data/all_gaze_data-' + first_system_timestamp + '.csv', index=False)
 
 print("Temps total de post-traitement des données après l'acquisition : %s secondes ---" % (time.time() - start_time))

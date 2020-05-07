@@ -32,23 +32,21 @@ def normalize_col(col):
     return norm
 
 
-def process_one_image(filename=FILENAME, imagename=IMAGENAME, default_path='', maxdist=175, mindur=2000):
-    df = pd.read_excel(default_path + r'data/' + filename + '.xlsx')
+def process_one_image(df, filename=FILENAME, imagename=IMAGENAME, default_path='', maxdist=175, mindur=2000):
 
     df_fixations = process_fixations(df, maxdist, mindur)
 
-    df_fixations.to_excel(default_path + r'processed_data/' + filename + '-fixations.xlsx', index=False)
+    df_fixations.to_csv(default_path + r'processed_data/' + filename + '-fixations.csv', index=False)
 
     plotly_fixations_points(df_fixations, imagename,
                             default_path=default_path,
                             output_ind=str(maxdist))
 
 
-def process_many_images(dict_images, filename=FILENAME, default_path='', maxdist=175, mindur=2000):
-    df = pd.read_excel(default_path + r'data/' + filename + '.xlsx')
+def process_many_images(dict_images, df, filename, default_path='', maxdist=175, mindur=2000):
 
     df_fixations = process_fixations(df, maxdist, mindur)
-    df_fixations.to_excel(default_path + r'processed_data/' + filename + '-fixations.xlsx', index=False)
+    df_fixations.to_csv(default_path + r'processed_data/' + filename + '-fixations.csv', index=False)
 
     df_fixations['dilatation'] = df_fixations['dilatation'].fillna(35)
 
