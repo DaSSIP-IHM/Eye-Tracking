@@ -16,7 +16,7 @@ def process_fixations(df, maxdist=175, mindur=2000):
     df['y'] = df['y'].astype(int)
 
     df['mean_pupil_diameter'] = (df['left_pupil_diameter'] + df['right_pupil_diameter']) / 2
-
+    print(df['mean_pupil_diameter'])
     Sfix, Efix = fixation_detection(df['x'], df['y'], df['mean_pupil_diameter'], df['system_time_stamp'],
                                     maxdist=maxdist, mindur=mindur)
 
@@ -59,5 +59,6 @@ def process_many_images(dict_images, filename=FILENAME, default_path='', maxdist
 
 
 if __name__ == '__main__':
-    FILENAME = 'all_gaze_data-337437127273'
-    # process_many_images(FILENAME, default_path=r'../', maxdist=100)
+    FILENAME = 'all_gaze_data-533914344803'
+    df = pd.read_excel(r'../data/' + FILENAME + '.xlsx')
+    process_fixations(df)

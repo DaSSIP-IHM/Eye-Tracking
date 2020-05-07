@@ -1,6 +1,6 @@
-import numpy
+import numpy as np
 from statistics import mean
-
+import math
 
 def fixation_detection(x_pos, y_pos, dilat, time, maxdist=175, mindur=100000):
     """Detects fixations, defined as consecutive samples with an inter-sample
@@ -53,7 +53,10 @@ def fixation_detection(x_pos, y_pos, dilat, time, maxdist=175, mindur=100000):
             si = 0 + i
             fixstart = True
             Sfix.append([time[i]])
-            dilats = [dilat[i]]
+            if not math.isnan(dilat[i]):
+                dilats = [dilat[i]]
+            else:
+                dilats=[]
 
 
         elif dist > maxdist and fixstart:
@@ -61,7 +64,10 @@ def fixation_detection(x_pos, y_pos, dilat, time, maxdist=175, mindur=100000):
             fixstart = False
             # only store the fixation if the duration is ok
             if time[i - 1] - Sfix[-1][0] >= mindur:
-                fix_dilat = mean(dilats)
+                if len(dilats) > 0:
+                    fix_dilat = mean(dilats)
+                else:
+                    fix_dilat = 35
                 Efix.append([Sfix[-1][0], time[i - 1], time[i - 1] - Sfix[-1][0], x_pos[si], y_pos[si], fix_dilat])
             # delete the last fixation start if it was too short
             else:
@@ -70,7 +76,8 @@ def fixation_detection(x_pos, y_pos, dilat, time, maxdist=175, mindur=100000):
         elif not fixstart:
             si += 1
         elif fixstart:
-            dilats.append(dilat[i])
+            if not math.isnan(dilat[i]):
+                dilats.append(dilat[i])
 
     # add last fixation end (we can lose it if dist > maxdist is false for the last point)
     if len(Sfix) > len(Efix):
