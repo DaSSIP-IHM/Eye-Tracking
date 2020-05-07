@@ -7,8 +7,6 @@ import os
 import copy
 
 
-# df = pd.read_excel('../gaze_data/analyze/all_gaze_data-952409502500-analyze.xlsx')
-
 
 def plotly_fixations_points(df, image_name, default_path='', output_ind=''):
     image_name = default_path + 'examples/liberte1080.jpg'

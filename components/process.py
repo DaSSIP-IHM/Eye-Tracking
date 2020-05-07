@@ -58,5 +58,5 @@ def process_many_images(dict_images, df, filename, default_path='', maxdist=175,
 
 if __name__ == '__main__':
     FILENAME = 'all_gaze_data-533914344803'
-    df = pd.read_excel(r'../data/' + FILENAME + '.xlsx')
-    process_fixations(df)
+    #df = pd.read_excel(r'../data/' + FILENAME + '.xlsx')
+    #process_fixations(df)
