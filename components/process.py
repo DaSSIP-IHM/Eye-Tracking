@@ -44,21 +44,21 @@ def process_one_image(filename=FILENAME, imagename=IMAGENAME, default_path='', m
                             output_ind=str(maxdist))
 
 
-def process_many_images(filename=FILENAME,  default_path='', maxdist=175, mindur=2000):
+def process_many_images(dict_images, filename=FILENAME, default_path='', maxdist=175, mindur=2000):
     df = pd.read_excel(default_path + r'data/' + filename + '.xlsx')
 
     df_fixations = process_fixations(df, maxdist, mindur)
     df_fixations.to_excel(default_path + r'processed_data/' + filename + '-fixations.xlsx', index=False)
 
-
     df_fixations['dilatation'] = df_fixations['dilatation'].fillna(35)
 
     df_fixations['norm_dilatation'] = normalize_col(df_fixations['dilatation']) * 1500
 
-    export_video(df_fixations, filename, default_path)
+    # export_video(df_fixations, filename, default_path)
 
+    export_video(df_fixations, dict_images, filename, default_path)
 
 
 if __name__ == '__main__':
     FILENAME = 'all_gaze_data-337437127273'
-    process_many_images(FILENAME, default_path=r'../', maxdist=100)
+    # process_many_images(FILENAME, default_path=r'../', maxdist=100)

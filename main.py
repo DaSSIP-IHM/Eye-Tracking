@@ -7,11 +7,11 @@ import time
 
 lestobii = tobii.find_all_eyetrackers()
 montobii = lestobii[0]
-duree = 255
+duree = 10  # DUREE DE L'ACQUISITION EN SECONDES
 mouse = Controller()
-RESOLUTION = (1920, 1080)
-#image = True
-image_acquisition = True
+RESOLUTION = (1920, 1080)  # RESOLUTION DE L'ECRAN A DEFINIR
+# image = True
+image_acquisition = True  # CHOIX SI ACQUISITION DE L'IMAGE A L'ECRAN
 
 print("Son adresse IP: " + montobii.address)
 print("Le modèle: " + montobii.model)
@@ -20,18 +20,21 @@ print("Son numéro de série: " + montobii.serial_number)
 print("Et voici le flux durant l.a.es prochaine.s seconde.s : ", duree)
 
 list_positions = []
-list_images = dict()
+dict_images = dict()  # DICTIONNAIRE QUI VA CONTENIR TOUTES LES IMAGES SI ON FAIT UNE ACQUISITION
 all_gaze_data = []
 
 d = d3dshot.create(capture_output="numpy")
 d.display = d.displays[0]
 
+
 def get_image(name, d):
+    """Fonction qui permet de faire un screenshot"""
     im = d.screenshot()
-    list_images[name] = im
+    dict_images[name] = im
 
 
 def move_mouse(gaze_data):
+    """Fonction qui permet de déplacer la souris"""
     x = gaze_data['x']
     y = gaze_data['y']
 
@@ -52,6 +55,7 @@ def move_mouse(gaze_data):
 
 
 def gaze_data_callback(gaze_data):
+    """Fonction qui est appelée à l'acquisition de chaque frame"""
     gaze_data['mouse_position'] = mouse.position
     if gaze_data['left_gaze_point_validity'] == 1 and gaze_data['right_gaze_point_validity']:
         gaze_data['x'] = round(
@@ -71,7 +75,6 @@ def gaze_data_callback(gaze_data):
         gaze_data['x'] = min(max(0, int(gaze_data['x'] * RESOLUTION[0])), RESOLUTION[0])
         gaze_data['y'] = min(max(0, int(gaze_data['y'] * RESOLUTION[1])), RESOLUTION[1])
 
-
     if image_acquisition:
         if all_gaze_data == []:
             gaze_data['image_acquisition'] = False
@@ -88,7 +91,7 @@ def gaze_data_callback(gaze_data):
         all_gaze_data.append(gaze_data)
     print(gaze_data)
 
-
+#LANCEMENT DE L'ACQUISITION
 montobii.subscribe_to(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback, as_dictionary=True)
 
 time.sleep(duree)
@@ -96,33 +99,33 @@ montobii.unsubscribe_from(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback)
 
 start_time = time.time()
 
+#On place la gaze data dans un dataframe pandas
 df = pd.DataFrame.from_records(all_gaze_data)
-#print(df.shape)
 
 first_system_timestamp = str(df['system_time_stamp'].values[0])
 
 print(df.dtypes)
-# print(list_images)
 
-directory ='images/' + 'all_gaze_data-' + first_system_timestamp + "/"
+directory = 'images/' + 'all_gaze_data-' + first_system_timestamp + "/"
 
 if not os.path.exists(directory):
     os.makedirs(directory)
 
-#print(list_images)
-for timestamp in list_images:
+# print(list_images)
+'''
+for timestamp in dict_images:
     # print(list_images[timestamp])
-    im = Image.fromarray(list_images[timestamp]).save(directory + str(timestamp) + ".png")
+    im = Image.fromarray(dict_images[timestamp]).save(directory + str(timestamp) + ".png")
     del im
 
-del list_images
-
+del dict_images
+'''
 print("Temps d'export des screenshots en PNG : %s secondes ---" % (time.time() - start_time))
 
 df.to_excel('data/all_gaze_data-' + first_system_timestamp + '.xlsx', index=False)
 
 if image_acquisition:
-    process_many_images('all_gaze_data-' + first_system_timestamp)
+    process_many_images(dict_images, 'all_gaze_data-' + first_system_timestamp)
 else:
     process_one_image('all_gaze_data-' + first_system_timestamp)
 
