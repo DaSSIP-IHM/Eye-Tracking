@@ -70,10 +70,11 @@ def export_video(df_fixations, dict_images, filename, default_path='', fps=30):
         dict_images[timestamp] = cv2.cvtColor(dict_images[timestamp], cv2.COLOR_BGR2RGB)
         if len(x) == 1:
             # Transparency drawing : https://gist.github.com/IAmSuyogJadhav/305bfd9a0605a4c096383408bee7fd5c
+            #https://stackoverflow.com/questions/57104921/cv2-addweighted-except-some-color
             overlay = dict_images[timestamp].copy()
             circle = cv2.circle(overlay, center=(x, y), radius=size, color=(255, 135, 111), thickness=-1)
             alpha = 0.4
-            dict_images[timestamp] = cv2.addWeighted(overlay, alpha, dict_images[timestamp], 1 - alpha, 0)
+            dict_images[timestamp] = cv2.addWeighted(overlay, alpha, dict_images[timestamp], 1 - alpha, 0) #Combien de couches ? Superposition
             del overlay, circle
 
         height, width, layers = dict_images[timestamp].shape

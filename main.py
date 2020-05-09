@@ -1,4 +1,4 @@
-from pynput.mouse import Button, Controller
+from pynput.mouse import Controller
 import tobii_research as tobii
 import pandas as pd
 import d3dshot
