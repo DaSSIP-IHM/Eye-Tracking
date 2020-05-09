@@ -13,6 +13,7 @@ pip install -r requirements.txt
 You need to create folders in root before launching the scripts :  __data__, __examples__,  __processed_data__, __videos__.
 
 ## Video example
+Click on the image below to watch an example :
 
 [![Alt text](https://img.youtube.com/vi/Ned9yNGzGjw/0.jpg)](https://www.youtube.com/watch?v=Ned9yNGzGjw)
 
