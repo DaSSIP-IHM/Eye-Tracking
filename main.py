@@ -36,7 +36,6 @@ def get_image():
     Image.fromarray(im).save('images/' + str(round(time.time())) + ".png")
 
 
-
 def gaze_data_callback(gaze_data):
     """Fonction qui est appelée à l'acquisition de chaque frame"""
     gaze_data['mouse_position'] = mouse.position
@@ -61,28 +60,23 @@ def gaze_data_callback(gaze_data):
     all_gaze_data.append(gaze_data)
     print(gaze_data)
 
-def launch_acquisition_tobii(durre):
-    #LANCEMENT DE L'ACQUISITION
 
-    montobii.subscribe_to(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback, as_dictionary=True)
 
-    time.sleep(duree)
+
+def launch_acquisition_image():
+    while True:
+        get_image()
+
+
+
+if __name__ == '__main__':
+    p1 = Process(target=montobii.subscribe_to(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback, as_dictionary=True))
+    p1.start()
+    p2 = Process(target=launch_acquisition_image)
+    p2.start()
+    p1.join(timeout=duree)
+    p2.join(timeout=duree)
     montobii.unsubscribe_from(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback)
     df = pd.DataFrame.from_records(all_gaze_data)
     first_system_timestamp = str(df['system_time_stamp'].values[0])
     df.to_csv('data/all_gaze_data-' + first_system_timestamp + '.csv', index=False)
-
-    print('Acquisition terminée')
-
-def launch_acquisition_image():
-    while 1==1:
-        get_image()
-
-
-if __name__ == '__main__':
-    p1 = Process(target=launch_acquisition_tobii(duree))
-    p1.start()
-    p2 = Process(target=launch_acquisition_image)
-    p2.start()
-    p1.join()
-    p2.join(timeout=duree)
