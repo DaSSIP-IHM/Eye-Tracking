@@ -6,10 +6,11 @@ from components.process import *
 import time
 import gc
 import sys
+from multiprocessing import Process
 
 lestobii = tobii.find_all_eyetrackers()
 montobii = lestobii[0]
-duree = 290  # DUREE DE L'ACQUISITION EN SECONDES
+duree = 30  # DUREE DE L'ACQUISITION EN SECONDES
 RESOLUTION = (1920, 1080)  # RESOLUTION DE L'ECRAN A DEFINIR
 # image = True
 mouse = Controller()
@@ -22,39 +23,18 @@ print("Son numéro de série: " + montobii.serial_number)
 print("Et voici le flux durant l.a.es prochaine.s seconde.s : ", duree)
 
 list_positions = []
-dict_images = dict()  # DICTIONNAIRE QUI VA CONTENIR TOUTES LES IMAGES SI ON FAIT UNE ACQUISITION
+
 all_gaze_data = []
-
 d = d3dshot.create(capture_output="numpy")
-d.display = d.displays[0]
+d.display = d.displays[1]
 
 
-def get_image(name, d):
+def get_image():
     """Fonction qui permet de faire un screenshot"""
     im = d.screenshot()
-    dict_images[name] = im
 
+    Image.fromarray(im).save('images/' + str(round(time.time())) + ".png")
 
-def move_mouse(gaze_data):
-
-    """Fonction qui permet de déplacer la souris"""
-    x = gaze_data['x']
-    y = gaze_data['y']
-
-    list_positions.append((x, y))
-
-    number_mean = 40
-    if len(list_positions) > 11:
-        x = 0
-        y = 0
-        for k in range(-number_mean, 0):
-            x += list_positions[k][0]
-            y += list_positions[k][1]
-        x = x / number_mean
-        y = y / number_mean
-
-        print(x, y)
-    mouse.position = (x, y)
 
 
 def gaze_data_callback(gaze_data):
@@ -78,56 +58,31 @@ def gaze_data_callback(gaze_data):
         gaze_data['x'] = min(max(0, int(gaze_data['x'] * RESOLUTION[0])), RESOLUTION[0])
         gaze_data['y'] = min(max(0, int(gaze_data['y'] * RESOLUTION[1])), RESOLUTION[1])
 
-    if image_acquisition:
-        if all_gaze_data == []:
-            gaze_data['image_acquisition'] = False
-            all_gaze_data.append(gaze_data)
-
-        if all_gaze_data[-1]['image_acquisition']:
-            gaze_data['image_acquisition'] = False
-            all_gaze_data.append(gaze_data)
-        else:
-            gaze_data['image_acquisition'] = True
-            all_gaze_data.append(gaze_data)
-            get_image(gaze_data['system_time_stamp'], d)
-    else:
-        all_gaze_data.append(gaze_data)
+    all_gaze_data.append(gaze_data)
     print(gaze_data)
 
-#LANCEMENT DE L'ACQUISITION
-montobii.subscribe_to(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback, as_dictionary=True)
+def launch_acquisition_tobii(durre):
+    #LANCEMENT DE L'ACQUISITION
 
-time.sleep(duree)
-montobii.unsubscribe_from(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback)
+    montobii.subscribe_to(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback, as_dictionary=True)
 
-start_time = time.time()
-del d, mouse
-gc.collect()
-#On place la gaze data dans un dataframe pandas
-df = pd.DataFrame.from_records(all_gaze_data)
-del all_gaze_data
-gc.collect()
-first_system_timestamp = str(df['system_time_stamp'].values[0])
+    time.sleep(duree)
+    montobii.unsubscribe_from(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback)
+    df = pd.DataFrame.from_records(all_gaze_data)
+    first_system_timestamp = str(df['system_time_stamp'].values[0])
+    df.to_csv('data/all_gaze_data-' + first_system_timestamp + '.csv', index=False)
 
+    print('Acquisition terminée')
 
-
-# print(list_images)
-'''
-for timestamp in dict_images:
-    # print(list_images[timestamp])
-    im = Image.fromarray(dict_images[timestamp]).save(directory + str(timestamp) + ".png")
-    del im
-
-del dict_images
-'''
-print("Temps d'export des screenshots en PNG : %s secondes ---" % (time.time() - start_time))
+def launch_acquisition_image():
+    while 1==1:
+        get_image()
 
 
-if image_acquisition:
-    process_many_images(df, first_system_timestamp, dict_images)
-else:
-    process_one_image(df, first_system_timestamp, res=RESOLUTION)
-
-df.to_csv('data/all_gaze_data-' + first_system_timestamp + '.csv', index=False)
-
-print("Temps total de post-traitement des données après l'acquisition : %s secondes ---" % (time.time() - start_time))
+if __name__ == '__main__':
+    p1 = Process(target=launch_acquisition_tobii(duree))
+    p1.start()
+    p2 = Process(target=launch_acquisition_image)
+    p2.start()
+    p1.join()
+    p2.join(timeout=duree)
