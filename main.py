@@ -4,13 +4,15 @@ import pandas as pd
 import d3dshot
 from components.process import *
 import time
+import gc
+import sys
 
 lestobii = tobii.find_all_eyetrackers()
 montobii = lestobii[0]
 duree = 290  # DUREE DE L'ACQUISITION EN SECONDES
-mouse = Controller()
 RESOLUTION = (1920, 1080)  # RESOLUTION DE L'ECRAN A DEFINIR
 # image = True
+mouse = Controller()
 image_acquisition = True  # CHOIX SI ACQUISITION DE L'IMAGE A L'ECRAN
 
 print("Son adresse IP: " + montobii.address)
@@ -34,6 +36,7 @@ def get_image(name, d):
 
 
 def move_mouse(gaze_data):
+
     """Fonction qui permet de déplacer la souris"""
     x = gaze_data['x']
     y = gaze_data['y']
@@ -98,10 +101,12 @@ time.sleep(duree)
 montobii.unsubscribe_from(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback)
 
 start_time = time.time()
-
+del d, mouse
+gc.collect()
 #On place la gaze data dans un dataframe pandas
 df = pd.DataFrame.from_records(all_gaze_data)
-
+del all_gaze_data
+gc.collect()
 first_system_timestamp = str(df['system_time_stamp'].values[0])
 
 
