@@ -20,7 +20,7 @@ def process_fixations(df, maxdist=175, mindur=2000):
     Sfix, Efix = fixation_detection(df['x'], df['y'], df['mean_pupil_diameter'], df['system_time_stamp'],
                                     maxdist=maxdist, mindur=mindur)
 
-    df_fixations = pd.DataFrame(data=Efix, columns=['starttime', 'endtime', 'duration', 'x', 'y', 'dilatation'])
+    df_fixations = pd.DataFrame(data=Efix, columns=['starttime', 'endtime', 'duration', 'x', 'y', 'mean_dilatation', 'std_dilatation', 'len_dilatation'])
 
     df_fixations = df_fixations.sort_values(by=['starttime'])
 
@@ -47,14 +47,14 @@ def process_many_images(df, filename, dict_images, default_path='', maxdist=175,
     df_fixations = process_fixations(df, maxdist, mindur)
     df_fixations.to_csv(default_path + r'processed_data/' + filename + '-fixations.csv', index=False)
 
-    df_fixations['dilatation'] = df_fixations['dilatation'].fillna(35)
+    df_fixations['mean_dilatation'] = df_fixations['mean_dilatation'].fillna(35)
 
-    df_fixations['norm_dilatation'] = normalize_col(df_fixations['dilatation']) * 100
+    df_fixations['norm_dilatation'] = normalize_col(df_fixations['mean_dilatation']) * 100
 
     export_video(df_fixations, dict_images, filename, default_path)
 
 
 if __name__ == '__main__':
-    FILENAME = 'all_gaze_data-533914344803'
-    # df = pd.read_excel(r'../data/' + FILENAME + '.xlsx')
-    # process_fixations(df)
+    FILENAME = 'all_gaze_data-580732795766'
+    df = pd.read_csv(r'../data/' + FILENAME + '.csv')
+    print(process_fixations(df))
