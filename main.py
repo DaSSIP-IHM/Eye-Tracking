@@ -6,34 +6,16 @@ from components.process import *
 import time
 import gc
 import sys
-from multiprocessing import Process
+from multiprocessing import Process, Manager
 
-lestobii = tobii.find_all_eyetrackers()
-montobii = lestobii[0]
-duree = 30  # DUREE DE L'ACQUISITION EN SECONDES
+duree = 10  # DUREE DE L'ACQUISITION EN SECONDES
 RESOLUTION = (1920, 1080)  # RESOLUTION DE L'ECRAN A DEFINIR
 # image = True
 mouse = Controller()
 image_acquisition = True  # CHOIX SI ACQUISITION DE L'IMAGE A L'ECRAN
 
-print("Son adresse IP: " + montobii.address)
-print("Le modèle: " + montobii.model)
-print("Son petit nom (souvent vide): " + montobii.device_name)
-print("Son numéro de série: " + montobii.serial_number)
-print("Et voici le flux durant l.a.es prochaine.s seconde.s : ", duree)
-
-list_positions = []
 
 all_gaze_data = []
-d = d3dshot.create(capture_output="numpy")
-d.display = d.displays[1]
-
-
-def get_image():
-    """Fonction qui permet de faire un screenshot"""
-    im = d.screenshot()
-
-    Image.fromarray(im).save('images/' + str(round(time.time())) + ".png")
 
 
 def gaze_data_callback(gaze_data):
@@ -63,19 +45,52 @@ def gaze_data_callback(gaze_data):
 
 
 
-def launch_acquisition_image():
-    while True:
-        get_image()
 
+def launch_acquisition_image(dict_images):
+    d = d3dshot.create(capture_output="numpy")
+    d.display = d.displays[1]
+    while True:
+        im = d.screenshot()
+        dict_images[str(round(time.time()*1000))] = im
+
+
+def export_images(dict_images):
+    while True:
+        if len(dict_images) > 0:
+            timestamp, im = dict_images.popitem()
+            print(timestamp)
+            Image.fromarray(im).save('images/' + timestamp + ".png")
+        '''
+        if len(dict_images) > 0:
+            for k in dict_images:
+                print(k)
+                break'''
 
 
 if __name__ == '__main__':
-    p1 = Process(target=montobii.subscribe_to(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback, as_dictionary=True))
-    p1.start()
-    p2 = Process(target=launch_acquisition_image)
+
+
+    lestobii = tobii.find_all_eyetrackers()
+    montobii = lestobii[0]
+    print("Son adresse IP: " + montobii.address)
+    print("Le modèle: " + montobii.model)
+    print("Son numéro de série: " + montobii.serial_number)
+    print("Et voici le flux durant les prochaines secondes : ", duree)
+    montobii.subscribe_to(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback, as_dictionary=True)
+
+    manager = Manager()
+    dict_images = manager.dict()
+
+    p2 = Process(target=launch_acquisition_image, args=(dict_images,))
+    p3 = Process(target=export_images, args=(dict_images,))
+    # p1.start()
     p2.start()
-    p1.join(timeout=duree)
-    p2.join(timeout=duree)
+    p3.start()
+    # p1.join(timeout=duree)
+
+    p2.join()
+    p3.join()
+
     montobii.unsubscribe_from(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback)
     df = pd.DataFrame.from_records(all_gaze_data)
     first_system_timestamp = str(df['system_time_stamp'].values[0])
