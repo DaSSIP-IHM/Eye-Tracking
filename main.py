@@ -8,7 +8,7 @@ import gc
 import sys
 from multiprocessing import Process, Manager
 
-duree = 10  # DUREE DE L'ACQUISITION EN SECONDES
+duree = 20  # DUREE DE L'ACQUISITION EN SECONDES
 RESOLUTION = (1920, 1080)  # RESOLUTION DE L'ECRAN A DEFINIR
 # image = True
 mouse = Controller()
@@ -54,11 +54,12 @@ def launch_acquisition_image(dict_images):
         dict_images[str(round(time.time()*1000))] = im
 
 
+
 def export_images(dict_images):
     while True:
         if len(dict_images) > 0:
             timestamp, im = dict_images.popitem()
-            print(timestamp)
+            print(len(dict_images))
             Image.fromarray(im).save('images/' + timestamp + ".png")
         '''
         if len(dict_images) > 0:
@@ -88,8 +89,11 @@ if __name__ == '__main__':
     p3.start()
     # p1.join(timeout=duree)
 
-    p2.join()
-    p3.join()
+    p2.join(timeout=duree)
+    p3.join(timeout=duree)
+
+    p2.terminate()
+    p3.terminate()
 
     montobii.unsubscribe_from(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback)
     df = pd.DataFrame.from_records(all_gaze_data)
