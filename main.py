@@ -45,7 +45,6 @@ def gaze_data_callback(gaze_data):
 
 
 
-
 def launch_acquisition_image(dict_images):
     d = d3dshot.create(capture_output="numpy")
     d.display = d.displays[1]
@@ -79,22 +78,24 @@ if __name__ == '__main__':
     print("Et voici le flux durant les prochaines secondes : ", duree)
     montobii.subscribe_to(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback, as_dictionary=True)
 
-    manager = Manager()
-    dict_images = manager.dict()
+    if image_acquisition:
+        manager = Manager()
+        dict_images = manager.dict()
 
-    p2 = Process(target=launch_acquisition_image, args=(dict_images,))
-    p3 = Process(target=export_images, args=(dict_images,))
-    # p1.start()
-    p2.start()
-    p3.start()
-    # p1.join(timeout=duree)
+        p2 = Process(target=launch_acquisition_image, args=(dict_images,))
+        p3 = Process(target=export_images, args=(dict_images,))
+        # p1.start()
+        p2.start()
+        p3.start()
+        # p1.join(timeout=duree)
 
-    p2.join(timeout=duree)
-    p3.join(timeout=duree)
+        p2.join(timeout=duree)
+        p3.join(timeout=duree)
 
-    p2.terminate()
-    p3.terminate()
-
+        p2.terminate()
+        p3.terminate()
+    else:
+        time.sleep(duree)
     montobii.unsubscribe_from(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback)
     df = pd.DataFrame.from_records(all_gaze_data)
     first_system_timestamp = str(df['system_time_stamp'].values[0])
