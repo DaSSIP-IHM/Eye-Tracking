@@ -14,7 +14,6 @@ RESOLUTION = (1920, 1080)  # RESOLUTION DE L'ECRAN A DEFINIR
 mouse = Controller()
 image_acquisition = True  # CHOIX SI ACQUISITION DE L'IMAGE A L'ECRAN
 
-
 all_gaze_data = []
 
 
@@ -43,20 +42,17 @@ def gaze_data_callback(gaze_data):
     print(gaze_data)
 
 
-
-
 def launch_acquisition_image(dict_images):
     d = d3dshot.create(capture_output="numpy")
     d.display = d.displays[1]
     while True:
         im = d.screenshot()
-        dict_images[str(round(time.time()*1000))] = im
-
+        dict_images[str(round(time.time() * 1000))] = im
 
 
 def export_images(dict_images):
     export = True
-    list_len_images =[]
+    list_len_images = []
     while export:
         list_len_images.append(len(dict_images))
         if len(dict_images) > 0:
@@ -65,9 +61,7 @@ def export_images(dict_images):
             Image.fromarray(im).save('images/' + timestamp + ".png")
 
 
-
 if __name__ == '__main__':
-
 
     lestobii = tobii.find_all_eyetrackers()
     montobii = lestobii[0]
@@ -99,3 +93,5 @@ if __name__ == '__main__':
     df = pd.DataFrame.from_records(all_gaze_data)
     first_system_timestamp = str(df['system_time_stamp'].values[0])
     df.to_csv('data/all_gaze_data-' + first_system_timestamp + '.csv', index=False)
+    # https://stackoverflow.com/questions/47903791/how-to-terminate-a-multiprocess-in-python-when-a-given-condition-is-met
+    # Variable globale
