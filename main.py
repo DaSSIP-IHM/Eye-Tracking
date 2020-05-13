@@ -55,16 +55,15 @@ def launch_acquisition_image(dict_images):
 
 
 def export_images(dict_images):
-    while True:
+    export = True
+    list_len_images =[]
+    while export:
+        list_len_images.append(len(dict_images))
         if len(dict_images) > 0:
             timestamp, im = dict_images.popitem()
             print(len(dict_images))
             Image.fromarray(im).save('images/' + timestamp + ".png")
-        '''
-        if len(dict_images) > 0:
-            for k in dict_images:
-                print(k)
-                break'''
+
 
 
 if __name__ == '__main__':
