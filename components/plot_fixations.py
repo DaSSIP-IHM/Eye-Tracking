@@ -59,7 +59,8 @@ def plotly_fixations_points(df, image_name, res, default_path='', output_ind='')
 def export_video(df_fixations, first_timestamp, default_path='', fps=16):
     path = default_path + 'images/' + first_timestamp
 
-    img_list = []
+    out = cv2.VideoWriter(default_path + 'videos/' + first_timestamp + '.avi', cv2.VideoWriter_fourcc(*'DIVX'),
+                          fps=fps, frameSize=(1920,1080))
 
     for picname in os.listdir(path):
         imagename, file_extension = os.path.splitext(picname)
@@ -79,17 +80,7 @@ def export_video(df_fixations, first_timestamp, default_path='', fps=16):
             circle = cv2.circle(overlay, center=(x, y), radius=radius, color=(255, 135, 111), thickness=-1)
             alpha = 0.4
             img = cv2.addWeighted(overlay, alpha, img, 1 - alpha, 0)
-            del overlay, circle
-
-        height, width, layers = img.shape
-        size = (width, height)
-        img_list.append(img)
-
-    out = cv2.VideoWriter(default_path + 'videos/' + first_timestamp + '.avi', cv2.VideoWriter_fourcc(*'DIVX'),
-                          fps=fps, frameSize=size)
-
-    for i in range(len(img_list)):
-        out.write(img_list[i])
+        out.write(img)
     out.release()
 
 def plot_path(x, y, image_name, linewidth, markersize, default_path=''):

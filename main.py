@@ -7,7 +7,7 @@ import time
 from multiprocessing import Process, Manager
 import cv2
 
-duree = 250 # DUREE DE L'ACQUISITION EN SECONDES
+duree = 20 # DUREE DE L'ACQUISITION EN SECONDES
 RESOLUTION = (1920, 1080)  # RESOLUTION DE L'ECRAN A DEFINIR
 # image = True
 mouse = Controller()
