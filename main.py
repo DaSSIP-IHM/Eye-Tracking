@@ -7,7 +7,7 @@ import time
 from multiprocessing import Process, Manager
 import cv2
 
-duree = 25 # DUREE DE L'ACQUISITION EN SECONDES
+duree = 250 # DUREE DE L'ACQUISITION EN SECONDES
 RESOLUTION = (1920, 1080)  # RESOLUTION DE L'ECRAN A DEFINIR
 # image = True
 mouse = Controller()
@@ -16,7 +16,7 @@ image_acquisition = True  # CHOIX SI ACQUISITION DE L'IMAGE A L'ECRAN
 all_gaze_data = []
 
 def timestamp():
-    return round(time.time() * 1000)
+    return int(round(time.time() * 1000))
 
 
 def gaze_data_callback(gaze_data):
@@ -88,8 +88,8 @@ if __name__ == '__main__':
         p2.start()
         p3.start()
 
-        p2.join(timeout=duree)
-        p3.join(timeout=duree)
+        p2.join(timeout=duree/2)
+        p3.join(timeout=duree/2)
 
         p2.terminate()
         p3.terminate()

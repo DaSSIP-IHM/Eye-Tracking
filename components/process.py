@@ -42,7 +42,7 @@ def process_one_image(df, filename=FILENAME, res=(1920, 1080), imagename=IMAGENA
                             output_ind=str(maxdist))
 
 
-def process_many_images(df, first_timestamp, default_path='', maxdist=175, mindur=2000000):
+def process_many_images(df, first_timestamp, default_path='', maxdist=175, mindur=80):
     df_fixations = process_fixations(df, maxdist, mindur)
     df_fixations.to_csv(default_path + r'processed_data/' + first_timestamp + '-fixations.csv', index=False)
 

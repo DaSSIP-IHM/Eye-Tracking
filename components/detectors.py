@@ -2,7 +2,7 @@ import numpy as np
 from statistics import mean
 import math
 
-def fixation_detection(x_pos, y_pos, dilat, time, maxdist=25, mindur=50):
+def fixation_detection(x_pos, y_pos, dilat, time, maxdist=170, mindur=50):
     """Detects fixations, defined as consecutive samples with an inter-sample
     distance of less than a set amount of pixels (disregarding missing data)
 

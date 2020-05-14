@@ -56,7 +56,7 @@ def plotly_fixations_points(df, image_name, res, default_path='', output_ind='')
     fig.write_html(default_path + 'examples/testplot_points' + output_ind + '.html')
 
 
-def export_video(df_fixations, first_timestamp, default_path='', fps=24):
+def export_video(df_fixations, first_timestamp, default_path='', fps=16):
     path = default_path + 'images/' + first_timestamp
 
     img_list = []
@@ -73,12 +73,13 @@ def export_video(df_fixations, first_timestamp, default_path='', fps=24):
 
         x = temp_df['x']
         y = temp_df['y']
-        size = temp_df['norm_dilatation']
+        radius = temp_df['norm_dilatation']
         if len(x) == 1:
             overlay = img.copy()
-            cv2.circle(overlay, center=(x, y), radius=size, color=(255, 135, 111), thickness=-1)
+            circle = cv2.circle(overlay, center=(x, y), radius=radius, color=(255, 135, 111), thickness=-1)
             alpha = 0.4
             img = cv2.addWeighted(overlay, alpha, img, 1 - alpha, 0)
+            del overlay, circle
 
         height, width, layers = img.shape
         size = (width, height)
