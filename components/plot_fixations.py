@@ -23,7 +23,7 @@ def plotly_fixations_points(df, image_name, res, default_path='', output_ind='')
     df['duration'] = df['duration'] / 1000000
 
     hovertext = '<b>Durée</b> : ' + df['duration'].round(2).astype(str) + 's<br><b>Moyenne de dilatation</b> :' + df[
-        'dilatation'].round(2).astype(str) + 'mm<br><b>Fixation n°</b> ' + (df.index + 1).astype(str)
+        'mean_dilatation'].round(2).astype(str) + 'mm<br><b>Fixation n°</b> ' + (df.index + 1).astype(str)
 
     fig.add_trace(
         go.Scatter(x=df['x'], y=df['y'], mode='markers', marker_size=hoverduration, hoverinfo="text",
