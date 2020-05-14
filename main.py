@@ -4,11 +4,8 @@ import pandas as pd
 import d3dshot
 from components.process import *
 import time
-import gc
-import sys
 from multiprocessing import Process, Manager
-from tempfile import mkdtemp
-import os.path as path
+import cv2
 
 duree = 20  # DUREE DE L'ACQUISITION EN SECONDES
 RESOLUTION = (1920, 1080)  # RESOLUTION DE L'ECRAN A DEFINIR
@@ -17,6 +14,9 @@ mouse = Controller()
 image_acquisition = True  # CHOIX SI ACQUISITION DE L'IMAGE A L'ECRAN
 
 all_gaze_data = []
+
+def timestamp():
+    return round(time.time() * 1000000)
 
 
 def gaze_data_callback(gaze_data):
@@ -40,6 +40,8 @@ def gaze_data_callback(gaze_data):
         gaze_data['x'] = min(max(0, int(gaze_data['x'] * RESOLUTION[0])), RESOLUTION[0])
         gaze_data['y'] = min(max(0, int(gaze_data['y'] * RESOLUTION[1])), RESOLUTION[1])
 
+    gaze_data['timestamp'] = timestamp()
+
     all_gaze_data.append(gaze_data)
     print(gaze_data)
 
@@ -49,7 +51,7 @@ def launch_acquisition_image(dict_images):
     d.display = d.displays[1]
     while True:
         im = d.screenshot()
-        dict_images[str(round(time.time() * 1000))] = im
+        dict_images[str(timestamp())] = im
 
 
 def export_images(dict_images):
@@ -60,16 +62,11 @@ def export_images(dict_images):
         if len(dict_images) > 0:
             timestamp, im = dict_images.popitem()
             print(len(dict_images))
-
-            filename = 'images/' + timestamp + ".dat"
-            fpath = np.memmap(filename, dtype='uint8', mode='w+', shape=(1080, 1920, 3))
-            fpath[:] = im[:]
-            print(fpath)
-            #Image.fromarray(im).save('images/' + timestamp + ".png")
-
+            im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+            cv2.imwrite('images/' + timestamp + ".jpg", im)
 
 if __name__ == '__main__':
-    '''
+
     lestobii = tobii.find_all_eyetrackers()
     montobii = lestobii[0]
     print("Son adresse IP: " + montobii.address)
@@ -77,7 +74,7 @@ if __name__ == '__main__':
     print("Son numéro de série: " + montobii.serial_number)
     print("Et voici le flux durant les prochaines secondes : ", duree)
     montobii.subscribe_to(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback, as_dictionary=True)
-    '''
+
     if image_acquisition:
         manager = Manager()
         dict_images = manager.dict()

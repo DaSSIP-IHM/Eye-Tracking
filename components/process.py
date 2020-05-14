@@ -17,7 +17,7 @@ def process_fixations(df, maxdist=175, mindur=2000):
 
     df['mean_pupil_diameter'] = (df['left_pupil_diameter'] + df['right_pupil_diameter']) / 2
     print(df['mean_pupil_diameter'])
-    Sfix, Efix = fixation_detection(df['x'], df['y'], df['mean_pupil_diameter'], df['system_time_stamp'],
+    Sfix, Efix = fixation_detection(df['x'], df['y'], df['mean_pupil_diameter'], df['timestamp'],
                                     maxdist=maxdist, mindur=mindur)
 
     df_fixations = pd.DataFrame(data=Efix, columns=['starttime', 'endtime', 'duration', 'x', 'y', 'dilatation'])
