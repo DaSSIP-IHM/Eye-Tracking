@@ -7,6 +7,8 @@ import time
 import gc
 import sys
 from multiprocessing import Process, Manager
+from tempfile import mkdtemp
+import os.path as path
 
 duree = 20  # DUREE DE L'ACQUISITION EN SECONDES
 RESOLUTION = (1920, 1080)  # RESOLUTION DE L'ECRAN A DEFINIR
@@ -58,11 +60,16 @@ def export_images(dict_images):
         if len(dict_images) > 0:
             timestamp, im = dict_images.popitem()
             print(len(dict_images))
-            Image.fromarray(im).save('images/' + timestamp + ".png")
+
+            filename = 'images/' + timestamp + ".dat"
+            fpath = np.memmap(filename, dtype='uint8', mode='w+', shape=(1080, 1920, 3))
+            fpath[:] = im[:]
+            print(fpath)
+            #Image.fromarray(im).save('images/' + timestamp + ".png")
 
 
 if __name__ == '__main__':
-
+    '''
     lestobii = tobii.find_all_eyetrackers()
     montobii = lestobii[0]
     print("Son adresse IP: " + montobii.address)
@@ -70,17 +77,16 @@ if __name__ == '__main__':
     print("Son numéro de série: " + montobii.serial_number)
     print("Et voici le flux durant les prochaines secondes : ", duree)
     montobii.subscribe_to(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback, as_dictionary=True)
-
+    '''
     if image_acquisition:
         manager = Manager()
         dict_images = manager.dict()
 
         p2 = Process(target=launch_acquisition_image, args=(dict_images,))
         p3 = Process(target=export_images, args=(dict_images,))
-        # p1.start()
+
         p2.start()
         p3.start()
-        # p1.join(timeout=duree)
 
         p2.join(timeout=duree)
         p3.join(timeout=duree)
