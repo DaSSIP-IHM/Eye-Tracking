@@ -101,12 +101,8 @@ time.sleep(duree)
 montobii.unsubscribe_from(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback)
 
 start_time = time.time()
-del d, mouse
-gc.collect()
 #On place la gaze data dans un dataframe pandas
 df = pd.DataFrame.from_records(all_gaze_data)
-del all_gaze_data
-gc.collect()
 first_system_timestamp = str(df['system_time_stamp'].values[0])
 
 
