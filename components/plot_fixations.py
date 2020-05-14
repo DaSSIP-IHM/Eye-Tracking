@@ -5,8 +5,23 @@ from PIL import Image
 import cv2
 import os
 import copy
+import numpy as np
+import plotly.express as px
+
+def boxplot(df):
+    lst_col = 'list_dilats'
+
+    r = pd.DataFrame({
+        col: np.repeat(df[col].values, df[lst_col].str.len())
+        for col in df.columns.drop(lst_col)}
+    ).assign(**{lst_col: np.concatenate(df[lst_col].values)})[df.columns]
 
 
+
+    fig = px.box(r, x="starttime", y="list_dilats")
+    fig.show()
+
+    print(r)
 
 def plotly_fixations_points(df, image_name, res, default_path='', output_ind=''):
     image_name = default_path + 'examples/liberte1080.jpg'

@@ -67,7 +67,7 @@ def fixation_detection(x_pos, y_pos, dilat, time, maxdist=175, mindur=100000):
             if time[i - 1] - Sfix[-1][0] >= mindur:
                 if len(dilats) > 0:
                     Efix.append([Sfix[-1][0], time[i - 1], time[i - 1] - Sfix[-1][0], x_pos[si], y_pos[si], mean(dilats),
-                             np.std(dilats), len(dilats)])
+                             np.std(dilats), len(dilats), dilats])
                 else:
                     Efix.append(
                         [Sfix[-1][0], time[i - 1], time[i - 1] - Sfix[-1][0], x_pos[si], y_pos[si], 0, 0, 0])
@@ -85,7 +85,7 @@ def fixation_detection(x_pos, y_pos, dilat, time, maxdist=175, mindur=100000):
     if len(Sfix) > len(Efix):
         if len(dilats) > 0:
             Efix.append([Sfix[-1][0], time[i - 1], time[i - 1] - Sfix[-1][0], x_pos[si], y_pos[si], mean(dilats),
-                         np.std(dilats), len(dilats)])
+                         np.std(dilats), len(dilats), dilats])
         else:
             Efix.append(
                 [Sfix[-1][0], time[i - 1], time[i - 1] - Sfix[-1][0], x_pos[si], y_pos[si], 0, 0, 0])
