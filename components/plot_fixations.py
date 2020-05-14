@@ -56,37 +56,39 @@ def plotly_fixations_points(df, image_name, res, default_path='', output_ind='')
     fig.write_html(default_path + 'examples/testplot_points' + output_ind + '.html')
 
 
-def export_video(df_fixations, dict_images, filename, default_path='', fps=30):
+def export_video(df_fixations, first_timestamp, default_path='', fps=24):
+    path = default_path + 'images/' + first_timestamp
 
-    for timestamp in dict_images:
+    img_list = []
+
+    for picname in os.listdir(path):
+        imagename, file_extension = os.path.splitext(picname)
+
+        path_file = path + r'/' + imagename + file_extension
+        print(path_file)
+        img = cv2.imread(path_file)
 
         temp_df = df_fixations[
-            (df_fixations['starttime'] <= int(timestamp)) & (df_fixations['endtime'] > int(timestamp))]
+            (df_fixations['starttime'] <= int(imagename)) & (df_fixations['endtime'] > int(imagename))]
 
         x = temp_df['x']
         y = temp_df['y']
         size = temp_df['norm_dilatation']
-        print(temp_df)
-        dict_images[timestamp] = cv2.cvtColor(dict_images[timestamp], cv2.COLOR_BGR2RGB)
         if len(x) == 1:
-            # Transparency drawing : https://gist.github.com/IAmSuyogJadhav/305bfd9a0605a4c096383408bee7fd5c
-            #https://stackoverflow.com/questions/57104921/cv2-addweighted-except-some-color
-            overlay = dict_images[timestamp].copy()
-            circle = cv2.circle(overlay, center=(x, y), radius=size, color=(255, 135, 111), thickness=-1)
+            overlay = img.copy()
+            cv2.circle(overlay, center=(x, y), radius=size, color=(255, 135, 111), thickness=-1)
             alpha = 0.4
-            dict_images[timestamp] = cv2.addWeighted(overlay, alpha, dict_images[timestamp], 1 - alpha, 0) #Combien de couches ? Superposition
-            del overlay, circle
+            img = cv2.addWeighted(overlay, alpha, img, 1 - alpha, 0)
 
-        height, width, layers = dict_images[timestamp].shape
+        height, width, layers = img.shape
         size = (width, height)
+        img_list.append(img)
 
-
-
-    out = cv2.VideoWriter(default_path + 'videos/' + filename + '.avi', cv2.VideoWriter_fourcc(*'DIVX'),
+    out = cv2.VideoWriter(default_path + 'videos/' + first_timestamp + '.avi', cv2.VideoWriter_fourcc(*'DIVX'),
                           fps=fps, frameSize=size)
 
-    for timestamp in dict_images:
-        out.write(dict_images[timestamp])
+    for i in range(len(img_list)):
+        out.write(img_list[i])
     out.release()
 
 def plot_path(x, y, image_name, linewidth, markersize, default_path=''):
