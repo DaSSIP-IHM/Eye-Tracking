@@ -40,8 +40,8 @@ def gaze_data_callback(gaze_data):
         gaze_data['x'] = min(max(0, int(gaze_data['x'] * RESOLUTION[0])), RESOLUTION[0])
         gaze_data['y'] = min(max(0, int(gaze_data['y'] * RESOLUTION[1])), RESOLUTION[1])
 
-    gaze_data['timestamp'] = timestamp()
 
+    gaze_data['timestamp'] = timestamp()
     all_gaze_data.append(gaze_data)
     print(gaze_data)
 

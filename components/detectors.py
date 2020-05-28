@@ -2,7 +2,9 @@ import numpy as np
 from statistics import mean
 import math
 
+
 def fixation_detection(x_pos, y_pos, dilat, time, maxdist=170, mindur=50):
+
     """Detects fixations, defined as consecutive samples with an inter-sample
     distance of less than a set amount of pixels (disregarding missing data)
 
@@ -56,7 +58,7 @@ def fixation_detection(x_pos, y_pos, dilat, time, maxdist=170, mindur=50):
             if not math.isnan(dilat[i]):
                 dilats = [dilat[i]]
             else:
-                dilats=[]
+                dilats = []
 
 
         elif dist > maxdist and fixstart:
@@ -65,10 +67,11 @@ def fixation_detection(x_pos, y_pos, dilat, time, maxdist=170, mindur=50):
             # only store the fixation if the duration is ok
             if time[i - 1] - Sfix[-1][0] >= mindur:
                 if len(dilats) > 0:
-                    fix_dilat = mean(dilats)
+                    Efix.append([Sfix[-1][0], time[i - 1], time[i - 1] - Sfix[-1][0], x_pos[si], y_pos[si], mean(dilats),
+                             np.std(dilats), len(dilats), dilats])
                 else:
-                    fix_dilat = 35
-                Efix.append([Sfix[-1][0], time[i - 1], time[i - 1] - Sfix[-1][0], x_pos[si], y_pos[si], fix_dilat])
+                    Efix.append(
+                        [Sfix[-1][0], time[i - 1], time[i - 1] - Sfix[-1][0], x_pos[si], y_pos[si], 0, 0, 0])
             # delete the last fixation start if it was too short
             else:
                 Sfix.pop(-1)
@@ -81,10 +84,11 @@ def fixation_detection(x_pos, y_pos, dilat, time, maxdist=170, mindur=50):
 
     # add last fixation end (we can lose it if dist > maxdist is false for the last point)
     if len(Sfix) > len(Efix):
-        Efix.append(
-            [Sfix[-1][0], time[len(x_pos) - 1], time[len(x_pos) - 1] - Sfix[-1][0], x_pos[si], y_pos[si], dilat[si]])
+        if len(dilats) > 0:
+            Efix.append([Sfix[-1][0], time[i - 1], time[i - 1] - Sfix[-1][0], x_pos[si], y_pos[si], mean(dilats),
+                         np.std(dilats), len(dilats), dilats])
+        else:
+            Efix.append(
+                [Sfix[-1][0], time[i - 1], time[i - 1] - Sfix[-1][0], x_pos[si], y_pos[si], 0, 0, 0])
 
     return Sfix, Efix
-
-
-
