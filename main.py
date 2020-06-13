@@ -12,7 +12,7 @@ RESOLUTION = (1920, 1080)  # RESOLUTION DE L'ECRAN A DEFINIR
 # image = True
 mouse = Controller()
 image_acquisition = True  # CHOIX SI ACQUISITION DE L'IMAGE A L'ECRAN
-
+monitor = 0
 all_gaze_data = []
 
 def timestamp():
@@ -48,7 +48,7 @@ def gaze_data_callback(gaze_data):
 
 def launch_acquisition_image(dict_images):
     d = d3dshot.create(capture_output="numpy")
-    d.display = d.displays[0]
+    d.display = d.displays[monitor]
     while True:
         im = d.screenshot()
         dict_images[str(timestamp())] = im
@@ -97,6 +97,7 @@ if __name__ == '__main__':
         time.sleep(duree)
     montobii.unsubscribe_from(tobii.EYETRACKER_GAZE_DATA, gaze_data_callback)
     df = pd.DataFrame.from_records(all_gaze_data)
+    df['mean_pupil_diameter'] = (df['left_pupil_diameter'] + df['right_pupil_diameter']) / 2
     df.to_csv('data/all_gaze_data-' + first_timestamp + '.csv', index=False)
 
     if image_acquisition:
