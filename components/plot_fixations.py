@@ -8,23 +8,8 @@ import copy
 import numpy as np
 import plotly.express as px
 
-def boxplot(df):
-    lst_col = 'list_dilats'
-
-    r = pd.DataFrame({
-        col: np.repeat(df[col].values, df[lst_col].str.len())
-        for col in df.columns.drop(lst_col)}
-    ).assign(**{lst_col: np.concatenate(df[lst_col].values)})[df.columns]
-
-
-
-    fig = px.box(r, x="starttime", y="list_dilats")
-    fig.show()
-
-    print(r)
-
 def plotly_fixations_points(df, image_name, res, default_path='', output_ind=''):
-    image_name = default_path + 'examples/liberte1080.jpg'
+
     fig = go.Figure()
     # x, y, duration
 
@@ -71,11 +56,11 @@ def plotly_fixations_points(df, image_name, res, default_path='', output_ind='')
     fig.write_html(default_path + 'examples/testplot_points' + output_ind + '.html')
 
 
-def export_video(df_fixations, first_timestamp, default_path='', fps=16):
+def export_video(df_fixations, first_timestamp, default_path='', fps=16, res=(1920,1080)):
     path = default_path + 'images/' + first_timestamp
 
     out = cv2.VideoWriter(default_path + 'videos/' + first_timestamp + '.avi', cv2.VideoWriter_fourcc(*'DIVX'),
-                          fps=fps, frameSize=(1920,1080))
+                          fps=fps, frameSize=res)
 
     for picname in os.listdir(path):
         imagename, file_extension = os.path.splitext(picname)
@@ -98,6 +83,23 @@ def export_video(df_fixations, first_timestamp, default_path='', fps=16):
         out.write(img)
     out.release()
 
+
+'''
+def boxplot(df):
+    lst_col = 'list_dilats'
+
+    r = pd.DataFrame({
+        col: np.repeat(df[col].values, df[lst_col].str.len())
+        for col in df.columns.drop(lst_col)}
+    ).assign(**{lst_col: np.concatenate(df[lst_col].values)})[df.columns]
+
+
+
+    fig = px.box(r, x="starttime", y="list_dilats")
+    fig.show()
+
+    print(r)
+
 def plot_path(x, y, image_name, linewidth, markersize, default_path=''):
     print('This function plot_path is deprecated.')
     image_name = default_path + 'examples/liberte1080.jpg'
@@ -107,3 +109,4 @@ def plot_path(x, y, image_name, linewidth, markersize, default_path=''):
     plt.plot(x, y, linewidth=linewidth, markersize=markersize)
     plt.savefig(default_path + 'examples/testplot_path.png', dpi=300)
     plt.show()
+'''
