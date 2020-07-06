@@ -3,7 +3,8 @@ from statistics import mean
 import math
 
 
-def fixation_detection(x_pos, y_pos, dilat, time, maxdist=175, mindur=100000):
+def fixation_detection(x_pos, y_pos, dilat, time, maxdist=170, mindur=50):
+
     """Detects fixations, defined as consecutive samples with an inter-sample
     distance of less than a set amount of pixels (disregarding missing data)
 
@@ -17,7 +18,7 @@ def fixation_detection(x_pos, y_pos, dilat, time, maxdist=175, mindur=100000):
 
     missing	-	value to be used for missing data (default = 0.0)
     maxdist	-	maximal inter sample distance in pixels (default = 25)
-    mindur	-	minimal duration of a fixation in microseconds; detected
+    mindur	-	minimal duration of a fixation in milliseconds; detected
                 fixation cadidates will be disregarded if they are below
                 this duration (default = 100)
 
