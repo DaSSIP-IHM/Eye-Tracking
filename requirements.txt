@@ -65,6 +65,6 @@ SoundFile==0.10.3.post1
 tables==3.6.1
 tobii-research==1.7.0
 tqdm==4.43.0
-urllib3==1.25.8
+urllib3==1.26.5
 wxPython==4.0.7.post2
 xlrd==1.2.0
