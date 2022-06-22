@@ -28,7 +28,7 @@ moviepy==1.0.2
 msgpack==1.0.0
 msgpack-numpy==0.4.4.3
 numexpr==2.7.1
-numpy==1.18.1
+numpy==1.22.0
 opencv-python==4.2.0.32
 openpyxl==3.0.3
 pandas==1.0.1
